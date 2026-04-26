@@ -1,0 +1,136 @@
+.login-page {
+  min-height: 100vh;
+  background: url('/src/assets/hero-bg.png') no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+}
+
+.login-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+}
+
+.login-glass-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 50px;
+  border-radius: 32px;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.login-logo {
+  font-family: var(--font-outfit);
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--success);
+  letter-spacing: 4px;
+  margin-bottom: 20px;
+}
+
+.login-header h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.login-header p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  margin-bottom: 40px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group-login {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.form-group-login label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-group-login input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 20px;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.form-group-login input:focus {
+  border-color: var(--success);
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.login-error {
+  color: #ff4d4d;
+  font-size: 13px;
+  background: rgba(255, 77, 77, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.login-submit-btn {
+  background: #7FC847;
+  color: white;
+  padding: 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.login-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(127, 200, 71, 0.3);
+}
+
+.login-footer {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-link {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: white;
+}

@@ -1,0 +1,140 @@
+.menu-page {
+  padding: 150px 5% 100px 5%;
+  background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.6)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2532&auto=format&fit=crop') center/cover fixed no-repeat;
+  min-height: 100vh;
+}
+
+.menu-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px 25px;
+}
+
+.menu-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+}
+
+.plate-image {
+  width: 180px;
+  height: 180px;
+  z-index: 2;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
+  transition: transform 0.3s ease;
+  border-radius: 50%;
+}
+
+.menu-card:hover .plate-image {
+  transform: scale(1.1) translateY(-10px);
+}
+
+.plate-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* changed from contain to cover to fill the rounded square */
+  border-radius: 50%;
+}
+
+.card-bg {
+  width: 100%;
+  background: #f7f9f7;
+  border-radius: 16px;
+  padding: 110px 25px 25px 25px;
+  margin-top: -90px;
+  text-align: center;
+  z-index: 1;
+  color: #333333;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-card:hover .card-bg {
+  background: var(--success);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(127, 200, 71, 0.2);
+}
+
+.dish-name {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+  color: #1a1a1a;
+  transition: color 0.3s ease;
+}
+
+.menu-card:hover .dish-name {
+  color: #ffffff;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 15px 0;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.menu-card:hover .divider {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.dish-desc {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.menu-card:hover .dish-desc {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.add-btn {
+  background: #4a7c59; /* Green from the image button */
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.menu-card:hover .add-btn {
+  background: #ffffff;
+  color: var(--success);
+}
+
+.add-btn:hover {
+  transform: scale(1.1);
+  background: #3b6347;
+}
+
+@media (max-width: 768px) {
+  .menu-grid {
+    gap: 60px 20px;
+  }
+}

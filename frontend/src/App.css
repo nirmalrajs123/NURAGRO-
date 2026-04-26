@@ -1,0 +1,153 @@
+.content-section {
+  padding: 120px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.content-section.dark {
+  max-width: 100%;
+  background: #0a0a0a;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+
+.underline {
+  width: 60px;
+  height: 4px;
+  background: var(--accent);
+  margin: 0 auto;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.product-card {
+  padding: 30px;
+  border-radius: 24px;
+  transition: transform 0.3s ease;
+  background: white;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+}
+
+.product-img-placeholder {
+  width: 100%;
+  height: 200px;
+  background: #f0f0f0;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.product-card h3 {
+  margin-bottom: 10px;
+}
+
+.product-card p {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.card-btn {
+  background: #f0f0f0;
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  width: 100%;
+}
+
+.about-content {
+  display: flex;
+  gap: 60px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-text {
+  flex: 1;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.benefits {
+  list-style: none;
+  margin-top: 30px;
+}
+
+.benefits li {
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.about-image {
+  flex: 1;
+  height: 400px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+footer {
+  background: #000;
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-brand {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.footer-links a {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-links a:hover {
+  color: white;
+}
+
+.copyright {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .about-content {
+    flex-direction: column;
+  }
+  .about-image {
+    width: 100%;
+  }
+}
