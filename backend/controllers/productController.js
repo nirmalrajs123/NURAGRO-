@@ -19,16 +19,20 @@ exports.getProducts = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const fields = [
-      'name', 'description', 'category_id', 'image', 'packing', 
-      'is_active', 'calories', 'total_fat', 'saturated_fat', 'cholesterol', 
-      'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber', 'sugars', 'protein', 'vitamins', 'description_facts', 'weight', 'packing_details', 'packing_options', 'nutrition_file', 'type_options', 'spec_file'
+      'name', 'description', 'isFeatured', 'path', 'category_id', 'health_benefits', 
+      'is_active', 'nutrition_file', 'type_options', 'product_imag_path', 
+      'specifications_image_path', 'nutrition_image_path', 'image', 'packing', 
+      'calories', 'total_fat', 'saturated_fat', 'cholesterol', 'sodium', 
+      'potassium', 'total_carbohydrate', 'dietary_fiber', 'sugars', 'protein', 
+      'vitamins', 'description_facts', 'weight', 'packing_details', 
+      'packing_options', 'spec_file', 'facts'
     ];
     
     const placeholders = fields.map((_, i) => `$${i + 1}`).join(', ');
     const values = fields.map(f => {
       const val = req.body[f];
       if (val === undefined) return null;
-      if (['packing_options', 'type_options'].includes(f)) return JSON.stringify(val);
+      if (['type_options', 'packing_options'].includes(f)) return JSON.stringify(val);
       return val;
     });
 
@@ -49,16 +53,20 @@ exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const fields = [
-      'name', 'description', 'category_id', 'image', 'packing', 
-      'is_active', 'calories', 'total_fat', 'saturated_fat', 'cholesterol', 
-      'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber', 'sugars', 'protein', 'vitamins', 'description_facts', 'weight', 'packing_details', 'packing_options', 'nutrition_file', 'type_options', 'spec_file'
+      'name', 'description', 'isFeatured', 'path', 'category_id', 'health_benefits', 
+      'is_active', 'nutrition_file', 'type_options', 'product_imag_path', 
+      'specifications_image_path', 'nutrition_image_path', 'image', 'packing', 
+      'calories', 'total_fat', 'saturated_fat', 'cholesterol', 'sodium', 
+      'potassium', 'total_carbohydrate', 'dietary_fiber', 'sugars', 'protein', 
+      'vitamins', 'description_facts', 'weight', 'packing_details', 
+      'packing_options', 'spec_file', 'facts'
     ];
 
     const setClause = fields.map((f, i) => `"${f}" = $${i + 1}`).join(', ');
     const values = fields.map(f => {
       const val = req.body[f];
       if (val === undefined) return null;
-      if (['packing_options', 'type_options'].includes(f)) return JSON.stringify(val);
+      if (['type_options', 'packing_options'].includes(f)) return JSON.stringify(val);
       return val;
     });
     values.push(id);

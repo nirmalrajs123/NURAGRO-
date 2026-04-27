@@ -1,0 +1,70 @@
+id: integer [Nullable: NO]
+name: character varying(255) [Nullable: NO]
+description: text [Nullable: YES]
+isFeatured: boolean [Nullable: YES]
+createdAt: timestamp with time zone [Nullable: NO]
+updatedAt: timestamp with time zone [Nullable: NO]
+path: text [Nullable: YES]
+category_id: integer [Nullable: YES]
+health_benefits: text [Nullable: YES]
+is_active: boolean [Nullable: YES]
+is_delete: boolean [Nullable: YES]
+nutrition_file: text [Nullable: YES]
+type_options: jsonb [Nullable: YES]
+product_imag_path: text [Nullable: YES]
+specifications_image_path: text [Nullable: YES]
+nutrition_image_path: text [Nullable: YES]
+image: text [Nullable: YES]
+packing: text [Nullable: YES]
+calories: text [Nullable: YES]
+total_fat: text [Nullable: YES]
+saturated_fat: text [Nullable: YES]
+cholesterol: text [Nullable: YES]
+sodium: text [Nullable: YES]
+potassium: text [Nullable: YES]
+total_carbohydrate: text [Nullable: YES]
+dietary_fiber: text [Nullable: YES]
+sugars: text [Nullable: YES]
+protein: text [Nullable: YES]
+vitamins: text [Nullable: YES]
+description_facts: text [Nullable: YES]
+weight: text [Nullable: YES]
+packing_details: text [Nullable: YES]
+packing_options: jsonb [Nullable: YES]
+spec_file: text [Nullable: YES]
+facts: text [Nullable: YES]
+
+SUGGESTED CONTROLLER FIELDS:
+[
+  "name",
+  "description",
+  "isFeatured",
+  "path",
+  "category_id",
+  "health_benefits",
+  "is_active",
+  "nutrition_file",
+  "type_options",
+  "product_imag_path",
+  "specifications_image_path",
+  "nutrition_image_path",
+  "image",
+  "packing",
+  "calories",
+  "total_fat",
+  "saturated_fat",
+  "cholesterol",
+  "sodium",
+  "potassium",
+  "total_carbohydrate",
+  "dietary_fiber",
+  "sugars",
+  "protein",
+  "vitamins",
+  "description_facts",
+  "weight",
+  "packing_details",
+  "packing_options",
+  "spec_file",
+  "facts"
+]

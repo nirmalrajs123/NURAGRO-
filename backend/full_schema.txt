@@ -1,0 +1,17 @@
+category_id: integer
+createdAt: timestamp with time zone
+description: text
+facts: text
+health_benefits: text
+id: integer
+isFeatured: boolean
+is_active: boolean
+is_delete: boolean
+name: character varying
+nutrition_file: text
+nutrition_image_path: text
+path: text
+product_imag_path: text
+specifications_image_path: text
+type_options: jsonb
+updatedAt: timestamp with time zone
