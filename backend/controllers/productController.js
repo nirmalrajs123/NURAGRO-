@@ -23,18 +23,42 @@ exports.createProduct = async (req, res) => {
   try {
     await client.query('BEGIN');
 
+    // Parse JSON fields if they come as strings (common with multipart/form-data)
+    let { 
+      name, description, isFeatured, path, category_id, health_benefits,
+      is_active, calories, total_fat, saturated_fat, cholesterol, sodium,
+      potassium, total_carbohydrate, dietary_fiber, sugars, protein,
+      vitamins, description_facts, weight, packing_details, facts,
+      type_options, packing_options 
+    } = req.body;
+
+    if (typeof type_options === 'string') type_options = JSON.parse(type_options);
+    if (typeof packing_options === 'string') packing_options = JSON.parse(packing_options);
+
+    // Extract file paths from multer req.files (safe check)
+    const image = (req.files && req.files['image']) ? `/uploads/${req.files['image'][0].filename}` : req.body.image;
+    const spec_file = (req.files && req.files['spec_file']) ? `/uploads/${req.files['spec_file'][0].filename}` : req.body.spec_file;
+    const nutrition_file = (req.files && req.files['nutrition_file']) ? `/uploads/${req.files['nutrition_file'][0].filename}` : req.body.nutrition_file;
+
     const fields = [
       'name', 'description', 'isFeatured', 'path', 'category_id', 'health_benefits', 
-      'is_active', 'nutrition_file', 'product_imag_path', 
-      'specifications_image_path', 'nutrition_image_path', 'image', 'packing', 
-      'calories', 'total_fat', 'saturated_fat', 'cholesterol', 'sodium', 
-      'potassium', 'total_carbohydrate', 'dietary_fiber', 'sugars', 'protein', 
-      'vitamins', 'description_facts', 'weight', 'packing_details', 
-      'spec_file', 'facts'
+      'is_active', 'image', 'packing', 'calories', 'total_fat', 'saturated_fat', 
+      'cholesterol', 'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber', 
+      'sugars', 'protein', 'vitamins', 'description_facts', 'weight', 
+      'packing_details', 'spec_file', 'nutrition_file', 'facts'
     ];
     
+    // Construct values array for the query
+    const data = {
+      name, description, isFeatured, path, category_id, health_benefits,
+      is_active, image, packing: req.body.packing, calories, total_fat, saturated_fat,
+      cholesterol, sodium, potassium, total_carbohydrate, dietary_fiber,
+      sugars, protein, vitamins, description_facts, weight,
+      packing_details, spec_file, nutrition_file, facts
+    };
+
     const placeholders = fields.map((_, i) => `$${i + 1}`).join(', ');
-    const values = fields.map(f => req.body[f] === undefined ? null : req.body[f]);
+    const values = fields.map(f => data[f] === undefined ? null : data[f]);
 
     const productQuery = `
       INSERT INTO "Products" (${fields.map(f => `"${f}"`).join(', ')}, is_delete, "createdAt", "updatedAt") 
@@ -46,8 +70,8 @@ exports.createProduct = async (req, res) => {
     const productId = productResult.rows[0].id;
 
     // Handle Type Variations
-    if (req.body.type_options && Array.isArray(req.body.type_options)) {
-      for (const opt of req.body.type_options) {
+    if (type_options && Array.isArray(type_options)) {
+      for (const opt of type_options) {
         if (opt.name || opt.description || opt.file) {
           await client.query(
             'INSERT INTO "Type" (variation_name, description, image_path, product_id, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, NOW(), NOW())',
@@ -58,12 +82,12 @@ exports.createProduct = async (req, res) => {
     }
 
     // Handle Packing Options
-    if (req.body.packing_options && Array.isArray(req.body.packing_options)) {
-      for (const opt of req.body.packing_options) {
-        if (opt.product || opt.packing || opt.container) {
+    if (packing_options && Array.isArray(packing_options)) {
+      for (const opt of packing_options) {
+        if (opt.product || opt.packing || opt.container || opt.file) {
           await client.query(
-            'INSERT INTO "packing" (packing_product, packing_packing, packing_container, product_id, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, NOW(), NOW())',
-            [opt.product, opt.packing, opt.container, productId]
+            'INSERT INTO "packing" (packing_product, packing_packing, packing_container, image_path, product_id, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, NOW(), NOW())',
+            [opt.product, opt.packing, opt.container, opt.file, productId]
           );
         }
       }
@@ -73,6 +97,7 @@ exports.createProduct = async (req, res) => {
     res.status(201).json({ id: productId, message: 'Product created successfully with variations' });
   } catch (err) {
     await client.query('ROLLBACK');
+    console.error('Error creating product:', err);
     res.status(400).json({ message: err.message });
   } finally {
     client.release();
@@ -85,18 +110,40 @@ exports.updateProduct = async (req, res) => {
     const { id } = req.params;
     await client.query('BEGIN');
 
+    let { 
+      name, description, isFeatured, path, category_id, health_benefits,
+      is_active, calories, total_fat, saturated_fat, cholesterol, sodium,
+      potassium, total_carbohydrate, dietary_fiber, sugars, protein,
+      vitamins, description_facts, weight, packing_details, facts,
+      type_options, packing_options 
+    } = req.body;
+
+    if (typeof type_options === 'string') type_options = JSON.parse(type_options);
+    if (typeof packing_options === 'string') packing_options = JSON.parse(packing_options);
+
+    // Extract file paths from multer req.files (safe check)
+    const image = (req.files && req.files['image']) ? `/uploads/${req.files['image'][0].filename}` : req.body.image;
+    const spec_file = (req.files && req.files['spec_file']) ? `/uploads/${req.files['spec_file'][0].filename}` : req.body.spec_file;
+    const nutrition_file = (req.files && req.files['nutrition_file']) ? `/uploads/${req.files['nutrition_file'][0].filename}` : req.body.nutrition_file;
+
     const fields = [
       'name', 'description', 'isFeatured', 'path', 'category_id', 'health_benefits', 
-      'is_active', 'nutrition_file', 'product_imag_path', 
-      'specifications_image_path', 'nutrition_image_path', 'image', 'packing', 
-      'calories', 'total_fat', 'saturated_fat', 'cholesterol', 'sodium', 
-      'potassium', 'total_carbohydrate', 'dietary_fiber', 'sugars', 'protein', 
-      'vitamins', 'description_facts', 'weight', 'packing_details', 
-      'spec_file', 'facts'
+      'is_active', 'image', 'packing', 'calories', 'total_fat', 'saturated_fat', 
+      'cholesterol', 'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber', 
+      'sugars', 'protein', 'vitamins', 'description_facts', 'weight', 
+      'packing_details', 'spec_file', 'nutrition_file', 'facts'
     ];
 
+    const data = {
+      name, description, isFeatured, path, category_id, health_benefits,
+      is_active, image, packing: req.body.packing, calories, total_fat, saturated_fat,
+      cholesterol, sodium, potassium, total_carbohydrate, dietary_fiber,
+      sugars, protein, vitamins, description_facts, weight,
+      packing_details, spec_file, nutrition_file, facts
+    };
+
     const setClause = fields.map((f, i) => `"${f}" = $${i + 1}`).join(', ');
-    const values = fields.map(f => req.body[f] === undefined ? null : req.body[f]);
+    const values = fields.map(f => data[f] === undefined ? null : data[f]);
     values.push(id);
 
     await client.query(`
@@ -107,8 +154,8 @@ exports.updateProduct = async (req, res) => {
 
     // Refresh Type Variations
     await client.query('DELETE FROM "Type" WHERE product_id = $1', [id]);
-    if (req.body.type_options && Array.isArray(req.body.type_options)) {
-      for (const opt of req.body.type_options) {
+    if (type_options && Array.isArray(type_options)) {
+      for (const opt of type_options) {
         if (opt.name || opt.description || opt.file) {
           await client.query(
             'INSERT INTO "Type" (variation_name, description, image_path, product_id, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, NOW(), NOW())',
@@ -120,12 +167,12 @@ exports.updateProduct = async (req, res) => {
 
     // Refresh Packing Options
     await client.query('DELETE FROM "packing" WHERE product_id = $1', [id]);
-    if (req.body.packing_options && Array.isArray(req.body.packing_options)) {
-      for (const opt of req.body.packing_options) {
-        if (opt.product || opt.packing || opt.container) {
+    if (packing_options && Array.isArray(packing_options)) {
+      for (const opt of packing_options) {
+        if (opt.product || opt.packing || opt.container || opt.file) {
           await client.query(
-            'INSERT INTO "packing" (packing_product, packing_packing, packing_container, product_id, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, NOW(), NOW())',
-            [opt.product, opt.packing, opt.container, id]
+            'INSERT INTO "packing" (packing_product, packing_packing, packing_container, image_path, product_id, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, NOW(), NOW())',
+            [opt.product, opt.packing, opt.container, opt.file, id]
           );
         }
       }
@@ -135,6 +182,7 @@ exports.updateProduct = async (req, res) => {
     res.json({ message: 'Product updated successfully with variations' });
   } catch (err) {
     await client.query('ROLLBACK');
+    console.error('Error updating product:', err);
     res.status(400).json({ message: err.message });
   } finally {
     client.release();
@@ -144,7 +192,6 @@ exports.updateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    // Type and Packing will be deleted automatically due to ON DELETE CASCADE
     const result = await pool.query('UPDATE "Products" SET is_delete = true, "updatedAt" = NOW() WHERE id = $1 RETURNING *', [id]);
     if (result.rows.length === 0) return res.status(404).json({ message: 'Product not found' });
     
