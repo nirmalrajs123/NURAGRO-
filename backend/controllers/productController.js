@@ -25,7 +25,12 @@ exports.createProduct = async (req, res) => {
     ];
     
     const placeholders = fields.map((_, i) => `$${i + 1}`).join(', ');
-    const values = fields.map(f => req.body[f] === undefined ? null : req.body[f]);
+    const values = fields.map(f => {
+      const val = req.body[f];
+      if (val === undefined) return null;
+      if (['packing_options', 'type_options'].includes(f)) return JSON.stringify(val);
+      return val;
+    });
 
     const query = `
       INSERT INTO "Products" (${fields.map(f => `"${f}"`).join(', ')}, is_delete, "createdAt", "updatedAt") 
@@ -50,7 +55,12 @@ exports.updateProduct = async (req, res) => {
     ];
 
     const setClause = fields.map((f, i) => `"${f}" = $${i + 1}`).join(', ');
-    const values = fields.map(f => req.body[f] === undefined ? null : req.body[f]);
+    const values = fields.map(f => {
+      const val = req.body[f];
+      if (val === undefined) return null;
+      if (['packing_options', 'type_options'].includes(f)) return JSON.stringify(val);
+      return val;
+    });
     values.push(id);
 
     const query = `
