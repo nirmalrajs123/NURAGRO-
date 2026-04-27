@@ -19,9 +19,9 @@ exports.getProducts = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const fields = [
-      'name', 'description', 'category_id', 'image', 'origin', 'grade', 'packing', 
-      'health_benefits', 'is_active', 'calories', 'total_fat', 'saturated_fat', 'cholesterol', 
-      'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber', 'sugars', 'protein', 'vitamins', 'description_facts', 'weight', 'packing_details', 'packing_options', 'spec_file', 'nutrition_file', 'type_options'
+      'name', 'description', 'category_id', 'image', 'packing', 
+      'is_active', 'calories', 'total_fat', 'saturated_fat', 'cholesterol', 
+      'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber', 'sugars', 'protein', 'vitamins', 'description_facts', 'weight', 'packing_details', 'packing_options', 'nutrition_file', 'type_options', 'spec_file'
     ];
     
     const placeholders = fields.map((_, i) => `$${i + 1}`).join(', ');
@@ -44,9 +44,9 @@ exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const fields = [
-      'name', 'description', 'category_id', 'image', 'origin', 'grade', 'packing', 
-      'health_benefits', 'is_active', 'calories', 'total_fat', 'saturated_fat', 'cholesterol', 
-      'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber', 'sugars', 'protein', 'vitamins', 'description_facts', 'weight', 'packing_details', 'packing_options', 'spec_file', 'nutrition_file', 'type_options'
+      'name', 'description', 'category_id', 'image', 'packing', 
+      'is_active', 'calories', 'total_fat', 'saturated_fat', 'cholesterol', 
+      'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber', 'sugars', 'protein', 'vitamins', 'description_facts', 'weight', 'packing_details', 'packing_options', 'nutrition_file', 'type_options', 'spec_file'
     ];
 
     const setClause = fields.map((f, i) => `"${f}" = $${i + 1}`).join(', ');

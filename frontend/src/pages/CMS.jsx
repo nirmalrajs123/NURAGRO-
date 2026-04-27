@@ -229,6 +229,26 @@ const CategoryPage = () => {
     is_active: true
   });
 
+  const buildCategoryTree = (cats, parentId = null) => {
+    return cats
+      .filter(cat => cat.parent_id_cat === parentId)
+      .map(cat => ({
+        ...cat,
+        children: buildCategoryTree(cats, cat.id)
+      }));
+  };
+
+  const renderCategoryOptions = (cats, level = 0) => {
+    return cats.map(cat => (
+      <React.Fragment key={cat.id}>
+        <option value={cat.id} disabled={editingId === cat.id}>
+          {'\u00A0'.repeat(level * 4)}{level > 0 ? '↳ ' : ''}{cat.category_name}
+        </option>
+        {cat.children && cat.children.length > 0 && renderCategoryOptions(cat.children, level + 1)}
+      </React.Fragment>
+    ));
+  };
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -381,6 +401,13 @@ const CategoryPage = () => {
                 <input type="text" value={formData.category_name || ''} onChange={e => setFormData({ ...formData, category_name: e.target.value })} />
               </div>
               <div className="form-group-light">
+                <label>Parent Category</label>
+                <select value={formData.parent_id_cat || ''} onChange={e => setFormData({ ...formData, parent_id_cat: e.target.value })}>
+                  <option value="">None (Top Level)</option>
+                  {renderCategoryOptions(buildCategoryTree(categories.filter(c => c.id !== editingId)))}
+                </select>
+              </div>
+              <div className="form-group-light">
                 <label>Category Image</label>
                 <div className="upload-zone" onClick={() => document.getElementById('cat-image-upload').click()}>
                   {formData.category_image ? (
@@ -413,13 +440,31 @@ const ProductPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+
+  const buildCategoryTree = (cats, parentId = null) => {
+    return cats
+      .filter(cat => cat.parent_id_cat === parentId)
+      .map(cat => ({
+        ...cat,
+        children: buildCategoryTree(cats, cat.id)
+      }));
+  };
+
+  const renderCategoryOptions = (cats, level = 0) => {
+    return cats.map(cat => (
+      <React.Fragment key={cat.id}>
+        <option value={cat.id}>
+          {'\u00A0'.repeat(level * 4)}{level > 0 ? '↳ ' : ''}{cat.category_name}
+        </option>
+        {cat.children && cat.children.length > 0 && renderCategoryOptions(cat.children, level + 1)}
+      </React.Fragment>
+    ));
+  };
   const [editingId, setEditingId] = useState(null);
   const [activeTab, setActiveTab] = useState('general');
   const [formData, setFormData] = useState({
     name: '', description: '', category_id: '', image: '', 
-    origin: '', grade: '', packing: '', 
-    health_benefits: '', is_active: true, calories: '', total_fat: '', saturated_fat: '', cholesterol: '', 
-    sodium: '', potassium: '', total_carbohydrate: '', dietary_fiber: '', sugars: '', protein: '', vitamins: '', description_facts: '', weight: '', packing_details: '',
+    description_facts: '', weight: '', packing_details: '',
     packing_options: [{ product: '', packing: '', container: '', file: null }],
     type_options: [{ name: '', description: '', file: null }],
     spec_file: null,
@@ -447,16 +492,17 @@ const ProductPage = () => {
       else await createProduct(payload);
       handleCloseModal();
       fetchProducts();
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+      console.error(err);
+      alert("Error saving product: " + (err.response?.data?.message || err.message));
+    }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false); setEditingId(null); setActiveTab('general');
     setFormData({
       name: '', description: '', category_id: '', image: '', 
-      origin: '', grade: '', packing: '', 
-      health_benefits: '', is_active: true, calories: '', total_fat: '', saturated_fat: '', cholesterol: '', 
-      sodium: '', potassium: '', total_carbohydrate: '', dietary_fiber: '', sugars: '', protein: '', vitamins: '', description_facts: '', weight: '', packing_details: '',
+      description_facts: '', weight: '', packing_details: '',
       packing_options: [{ product: '', packing: '', container: '', file: null }],
       type_options: [{ name: '', description: '', file: null }],
       spec_file: null,
@@ -607,7 +653,7 @@ const ProductPage = () => {
                     <div className="form-group-light"><label>Category</label>
                       <select value={formData.category_id || ''} onChange={e => setFormData({...formData, category_id: e.target.value})}>
                         <option value="">Select Category</option>
-                        {(categories || []).map(cat => <option key={cat.id} value={cat.id}>{cat.category_name}</option>)}
+                        {renderCategoryOptions(buildCategoryTree(categories || []))}
                       </select>
                     </div>
                     <div className="form-group-light">
@@ -628,46 +674,41 @@ const ProductPage = () => {
                         <input id="prod-image-upload" type="file" hidden onChange={handleFileChange} accept="image/*" />
                       </div>
                     </div>
-                    <div className="form-group-light">
-                      <label>Technical Specifications (PDF/DOCX)</label>
-                      <div className="upload-zone spec-zone" onClick={() => document.getElementById('spec-upload').click()}>
-                        {formData.spec_file ? (
-                          <div className="file-info">
-                            <FileText size={24} color="#3943c7" />
-                            <div className="file-details">
-                              <span>Specification File Attached</span>
-                              <p>Ready to save</p>
-                            </div>
-                            <button type="button" className="icon-btn delete" onClick={(e) => { e.stopPropagation(); setFormData({...formData, spec_file: null}); }}><X size={16} /></button>
-                          </div>
-                        ) : (
-                          <div className="upload-placeholder">
-                            <FileText size={28} />
-                            <span>Click to upload Technical Spec</span>
-                            <p>PDF, DOCX up to 10MB</p>
-                          </div>
-                        )}
-                        <input id="spec-upload" type="file" hidden onChange={(e) => {
-                          const file = e.target.files[0];
-                          if (file) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => setFormData({ ...formData, spec_file: reader.result });
-                            reader.readAsDataURL(file);
-                          }
-                        }} accept=".pdf,.doc,.docx" />
-                      </div>
-                    </div>
                   </div>
                   <div className="form-group-light" style={{ marginTop: '20px' }}><label>Description</label><textarea rows="3" value={formData.description || ''} onChange={e => setFormData({...formData, description: e.target.value})}></textarea></div>
                 </div>
               )}
               {activeTab === 'specs' && (
                 <div className="tab-pane">
-                  <div className="form-grid">
-                    <div className="form-group-light"><label>Origin</label><input type="text" value={formData.origin || ''} onChange={e => setFormData({...formData, origin: e.target.value})} /></div>
-                    <div className="form-group-light"><label>Grade</label><input type="text" value={formData.grade || ''} onChange={e => setFormData({...formData, grade: e.target.value})} /></div>
+                  <div className="form-group-light">
+                    <label>Specifications Document (PDF/Image)</label>
+                    <div className="upload-zone spec-zone" onClick={() => document.getElementById('spec-upload').click()}>
+                      {formData.spec_file ? (
+                        <div className="file-info">
+                          <FileText size={24} color="#3943c7" />
+                          <div className="file-details">
+                            <span>Specifications File Attached</span>
+                            <p>Ready to save</p>
+                          </div>
+                          <button type="button" className="icon-btn delete" onClick={(e) => { e.stopPropagation(); setFormData({...formData, spec_file: null}); }}><X size={16} /></button>
+                        </div>
+                      ) : (
+                        <div className="upload-placeholder">
+                          <UploadCloud size={32} />
+                          <span>Click to upload Specifications</span>
+                          <p>PDF, DOCX or Image up to 10MB</p>
+                        </div>
+                      )}
+                      <input id="spec-upload" type="file" hidden onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => setFormData({ ...formData, spec_file: reader.result });
+                          reader.readAsDataURL(file);
+                        }
+                      }} />
+                    </div>
                   </div>
-                  <div className="form-group-light"><label>Health Benefits</label><textarea rows="2" value={formData.health_benefits || ''} onChange={e => setFormData({...formData, health_benefits: e.target.value})}></textarea></div>
                 </div>
               )}
               {activeTab === 'type' && (

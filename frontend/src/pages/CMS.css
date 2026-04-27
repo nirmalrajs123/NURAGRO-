@@ -8,7 +8,8 @@
 }
 
 .admin-layout.light-theme-override {
-  background: #f4f7f6; /* Light gray background like in the image */
+  background: #f4f7f6;
+  /* Light gray background like in the image */
   color: #1a1f36;
 }
 
@@ -142,7 +143,8 @@
 }
 
 .add-master-btn {
-  background: #343b87; /* Dark blue button from image */
+  background: #343b87;
+  /* Dark blue button from image */
   color: white;
   border: none;
   padding: 12px 20px;
@@ -243,9 +245,20 @@
   transition: all 0.2s;
 }
 
-.icon-btn.view:hover { color: #4f46e5; background: #eef2ff; }
-.icon-btn.edit:hover { color: #3b82f6; background: #eff6ff; }
-.icon-btn.delete:hover { color: #ef4444; background: #fef2f2; }
+.icon-btn.view:hover {
+  color: #4f46e5;
+  background: #eef2ff;
+}
+
+.icon-btn.edit:hover {
+  color: #3b82f6;
+  background: #eff6ff;
+}
+
+.icon-btn.delete:hover {
+  color: #ef4444;
+  background: #fef2f2;
+}
 
 
 /* Modal Styles */
@@ -374,7 +387,7 @@
   height: 24px;
 }
 
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
@@ -402,11 +415,12 @@
   transition: .4s;
 }
 
-input:checked + .slider {
-  background-color: #059669; /* Green from the picture */
+input:checked+.slider {
+  background-color: #059669;
+  /* Green from the picture */
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(20px);
 }
 
@@ -440,7 +454,8 @@ input:checked + .slider:before {
 }
 
 .btn-save {
-  background: #3943c7; /* Bright blue button from image */
+  background: #3943c7;
+  /* Bright blue button from image */
   color: white;
   border: none;
   padding: 12px 24px;
@@ -459,15 +474,27 @@ input:checked + .slider:before {
 .dashboard-home {
   color: #1a1f36;
 }
-.dashboard-home h1 { margin: 0 0 20px 0; }
+
+.dashboard-home h1 {
+  margin: 0 0 20px 0;
+}
+
 .dashboard-welcome {
   background: #ffffff;
   padding: 40px;
   border-radius: 16px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
-.dashboard-welcome h2 { color: #1a1f36; margin-top: 0; }
-.dashboard-welcome p { color: #6b7280; }
+
+.dashboard-welcome h2 {
+  color: #1a1f36;
+  margin-top: 0;
+}
+
+.dashboard-welcome p {
+  color: #6b7280;
+}
+
 /* Large Modal for Products */
 .large-modal {
   max-width: 800px !important;
@@ -659,33 +686,14 @@ input:checked + .slider:before {
   padding: 20px;
 }
 
-.row-upload-zone {
-  min-height: 50px;
-  padding: 10px 20px;
-  border-style: solid;
-  border-width: 1px;
-  background: #ffffff;
-}
-
-.upload-placeholder.compact {
-  flex-direction: row;
-  gap: 12px;
-}
-
-.upload-placeholder.compact span {
-  font-size: 13px;
-}
-
-.file-info.compact {
-  gap: 10px;
-  padding: 0;
-}
-
-.file-info.compact .file-details span {
-  font-size: 13px;
-}
-
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
