@@ -1,19 +1,28 @@
 const pool = require('../config/db');
 
+// Helper to find file path by fieldname in multer's upload.any() array
+const getFilePath = (files, fieldname) => {
+  const file = files && files.find(f => f.fieldname === fieldname);
+  return file ? `/uploads/${file.filename}` : null;
+};
+
 // Get all products (with types and packing)
 exports.getProducts = async (req, res) => {
   try {
+    console.log('Fetching all products from database...');
     const result = await pool.query(`
       SELECT p.*, c.category_name,
-      (SELECT json_agg(t.*) FROM "Type" t WHERE t.product_id = p.id) as type_options,
-      (SELECT json_agg(pk.*) FROM "packing" pk WHERE pk.product_id = p.id) as packing_options
+      (SELECT json_agg(t.* ORDER BY t.id ASC) FROM "Type" t WHERE t.product_id = p.id) as type_options,
+      (SELECT json_agg(pk.* ORDER BY pk.id ASC) FROM "packing" pk WHERE pk.product_id = p.id) as packing_options
       FROM "Products" p 
       LEFT JOIN "Categories" c ON p.category_id = c.id 
       WHERE p.is_delete = false 
       ORDER BY p.id ASC
     `);
+    console.log(`Found ${result.rows.length} products.`);
     res.json(result.rows);
   } catch (err) {
+    console.error('Error in getProducts:', err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -23,32 +32,32 @@ exports.createProduct = async (req, res) => {
   try {
     await client.query('BEGIN');
 
-    // Parse JSON fields if they come as strings (common with multipart/form-data)
-    let { 
+    let {
       name, description, isFeatured, path, category_id, health_benefits,
       is_active, calories, total_fat, saturated_fat, cholesterol, sodium,
       potassium, total_carbohydrate, dietary_fiber, sugars, protein,
       vitamins, description_facts, weight, packing_details, facts,
-      type_options, packing_options 
+      type_options, packing_options
     } = req.body;
 
+    // Standardize data types
     if (typeof type_options === 'string') type_options = JSON.parse(type_options);
     if (typeof packing_options === 'string') packing_options = JSON.parse(packing_options);
+    if (category_id === 'null' || category_id === '' || isNaN(category_id)) category_id = null;
 
-    // Extract file paths from multer req.files (safe check)
-    const image = (req.files && req.files['image']) ? `/uploads/${req.files['image'][0].filename}` : req.body.image;
-    const spec_file = (req.files && req.files['spec_file']) ? `/uploads/${req.files['spec_file'][0].filename}` : req.body.spec_file;
-    const nutrition_file = (req.files && req.files['nutrition_file']) ? `/uploads/${req.files['nutrition_file'][0].filename}` : req.body.nutrition_file;
+    // Extract file paths from multer req.files (upload.any())
+    const image = getFilePath(req.files, 'image') || req.body.image;
+    const spec_file = getFilePath(req.files, 'spec_file') || req.body.spec_file;
+    const nutrition_file = getFilePath(req.files, 'nutrition_file') || req.body.nutrition_file;
 
     const fields = [
-      'name', 'description', 'isFeatured', 'path', 'category_id', 'health_benefits', 
-      'is_active', 'image', 'packing', 'calories', 'total_fat', 'saturated_fat', 
-      'cholesterol', 'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber', 
-      'sugars', 'protein', 'vitamins', 'description_facts', 'weight', 
+      'name', 'description', 'isFeatured', 'path', 'category_id', 'health_benefits',
+      'is_active', 'image', 'packing', 'calories', 'total_fat', 'saturated_fat',
+      'cholesterol', 'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber',
+      'sugars', 'protein', 'vitamins', 'description_facts', 'weight',
       'packing_details', 'spec_file', 'nutrition_file', 'facts'
     ];
-    
-    // Construct values array for the query
+
     const data = {
       name, description, isFeatured, path, category_id, health_benefits,
       is_active, image, packing: req.body.packing, calories, total_fat, saturated_fat,
@@ -69,32 +78,46 @@ exports.createProduct = async (req, res) => {
     const productResult = await client.query(productQuery, values);
     const productId = productResult.rows[0].id;
 
-    // Handle Type Variations
+    // Handle Type Variations with Physical File Paths
     if (type_options && Array.isArray(type_options)) {
-      for (const opt of type_options) {
-        if (opt.name || opt.description || opt.file) {
+      for (let i = 0; i < type_options.length; i++) {
+        const opt = type_options[i];
+        let filePath = opt.file;
+
+        if (filePath === `__TYPE_FILE_${i}__`) {
+          filePath = getFilePath(req.files, `type_file_${i}`);
+        }
+
+        if (opt.name || opt.description || filePath) {
           await client.query(
             'INSERT INTO "Type" (variation_name, description, image_path, product_id, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, NOW(), NOW())',
-            [opt.name, opt.description, opt.file, productId]
+            [opt.name, opt.description, filePath, productId]
           );
         }
       }
     }
 
-    // Handle Packing Options
+    // Handle Packing Options with Physical File Paths
     if (packing_options && Array.isArray(packing_options)) {
-      for (const opt of packing_options) {
-        if (opt.product || opt.packing || opt.container || opt.file) {
+      for (let i = 0; i < packing_options.length; i++) {
+        const opt = packing_options[i];
+        let filePath = opt.file;
+
+        if (filePath === `__PACKING_FILE_${i}__`) {
+          filePath = getFilePath(req.files, `packing_file_${i}`);
+        }
+
+        if (opt.product || opt.packing || opt.container || filePath) {
           await client.query(
             'INSERT INTO "packing" (packing_product, packing_packing, packing_container, image_path, product_id, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, NOW(), NOW())',
-            [opt.product, opt.packing, opt.container, opt.file, productId]
+            [opt.product, opt.packing, opt.container, filePath, productId]
           );
         }
       }
     }
 
     await client.query('COMMIT');
-    res.status(201).json({ id: productId, message: 'Product created successfully with variations' });
+    res.status(201).json({ id: productId, message: 'Product created successfully' });
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('Error creating product:', err);
@@ -110,27 +133,27 @@ exports.updateProduct = async (req, res) => {
     const { id } = req.params;
     await client.query('BEGIN');
 
-    let { 
+    let {
       name, description, isFeatured, path, category_id, health_benefits,
       is_active, calories, total_fat, saturated_fat, cholesterol, sodium,
       potassium, total_carbohydrate, dietary_fiber, sugars, protein,
       vitamins, description_facts, weight, packing_details, facts,
-      type_options, packing_options 
+      type_options, packing_options
     } = req.body;
 
     if (typeof type_options === 'string') type_options = JSON.parse(type_options);
     if (typeof packing_options === 'string') packing_options = JSON.parse(packing_options);
+    if (category_id === 'null' || category_id === '' || isNaN(category_id)) category_id = null;
 
-    // Extract file paths from multer req.files (safe check)
-    const image = (req.files && req.files['image']) ? `/uploads/${req.files['image'][0].filename}` : req.body.image;
-    const spec_file = (req.files && req.files['spec_file']) ? `/uploads/${req.files['spec_file'][0].filename}` : req.body.spec_file;
-    const nutrition_file = (req.files && req.files['nutrition_file']) ? `/uploads/${req.files['nutrition_file'][0].filename}` : req.body.nutrition_file;
+    const image = getFilePath(req.files, 'image') || req.body.image;
+    const spec_file = getFilePath(req.files, 'spec_file') || req.body.spec_file;
+    const nutrition_file = getFilePath(req.files, 'nutrition_file') || req.body.nutrition_file;
 
     const fields = [
-      'name', 'description', 'isFeatured', 'path', 'category_id', 'health_benefits', 
-      'is_active', 'image', 'packing', 'calories', 'total_fat', 'saturated_fat', 
-      'cholesterol', 'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber', 
-      'sugars', 'protein', 'vitamins', 'description_facts', 'weight', 
+      'name', 'description', 'isFeatured', 'path', 'category_id', 'health_benefits',
+      'is_active', 'image', 'packing', 'calories', 'total_fat', 'saturated_fat',
+      'cholesterol', 'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber',
+      'sugars', 'protein', 'vitamins', 'description_facts', 'weight',
       'packing_details', 'spec_file', 'nutrition_file', 'facts'
     ];
 
@@ -155,11 +178,18 @@ exports.updateProduct = async (req, res) => {
     // Refresh Type Variations
     await client.query('DELETE FROM "Type" WHERE product_id = $1', [id]);
     if (type_options && Array.isArray(type_options)) {
-      for (const opt of type_options) {
-        if (opt.name || opt.description || opt.file) {
+      for (let i = 0; i < type_options.length; i++) {
+        const opt = type_options[i];
+        let filePath = opt.file;
+
+        if (filePath === `__TYPE_FILE_${i}__`) {
+          filePath = getFilePath(req.files, `type_file_${i}`);
+        }
+
+        if (opt.name || opt.description || filePath) {
           await client.query(
             'INSERT INTO "Type" (variation_name, description, image_path, product_id, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, NOW(), NOW())',
-            [opt.name, opt.description, opt.file, id]
+            [opt.name, opt.description, filePath, id]
           );
         }
       }
@@ -168,18 +198,25 @@ exports.updateProduct = async (req, res) => {
     // Refresh Packing Options
     await client.query('DELETE FROM "packing" WHERE product_id = $1', [id]);
     if (packing_options && Array.isArray(packing_options)) {
-      for (const opt of packing_options) {
-        if (opt.product || opt.packing || opt.container || opt.file) {
+      for (let i = 0; i < packing_options.length; i++) {
+        const opt = packing_options[i];
+        let filePath = opt.file;
+
+        if (filePath === `__PACKING_FILE_${i}__`) {
+          filePath = getFilePath(req.files, `packing_file_${i}`);
+        }
+
+        if (opt.product || opt.packing || opt.container || filePath) {
           await client.query(
             'INSERT INTO "packing" (packing_product, packing_packing, packing_container, image_path, product_id, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, NOW(), NOW())',
-            [opt.product, opt.packing, opt.container, opt.file, id]
+            [opt.product, opt.packing, opt.container, filePath, id]
           );
         }
       }
     }
 
     await client.query('COMMIT');
-    res.json({ message: 'Product updated successfully with variations' });
+    res.json({ message: 'Product updated successfully' });
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('Error updating product:', err);
@@ -192,10 +229,8 @@ exports.updateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await pool.query('UPDATE "Products" SET is_delete = true, "updatedAt" = NOW() WHERE id = $1 RETURNING *', [id]);
-    if (result.rows.length === 0) return res.status(404).json({ message: 'Product not found' });
-    
-    res.json({ message: 'Product deleted (soft delete)' });
+    await pool.query('UPDATE "Products" SET is_delete = true, "updatedAt" = NOW() WHERE id = $1', [id]);
+    res.json({ message: 'Product deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
