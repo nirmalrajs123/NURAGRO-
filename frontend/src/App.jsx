@@ -1,16 +1,29 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import ProductShowcase from './components/ProductShowcase';
+import OfferingSection from './components/OfferingSection';
+import PromoCards from './components/PromoCards';
+import SpecialOffers from './components/SpecialOffers';
+import TrendingProducts from './components/TrendingProducts';
 import MenuPage from './components/MenuPage';
+import Certifications from './components/Certifications';
+import VerticalProductLists from './components/VerticalProductLists';
+import ServicesSection from './components/ServicesSection';
 import CMS from './pages/CMS';
 import Login from './pages/Login';
+import ProductDetailPage from './pages/ProductDetailPage';
 import './App.css';
 
 const Home = () => (
   <main>
     <Hero />
-    <ProductShowcase />
+    <OfferingSection />
+    <PromoCards />
+    <SpecialOffers />
+    <TrendingProducts />
+    <VerticalProductLists />
+    <ServicesSection />
+    <Certifications />
     <section id="about" className="content-section dark">
       <div className="section-header">
         <h2 style={{color: 'white'}}>About Nuragro</h2>
@@ -35,7 +48,9 @@ const AppContent = () => {
       
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/menu" element={<MenuPage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
         <Route path="/admin/*" element={<CMS />} />
         <Route path="/login" element={<Login />} />
       </Routes>

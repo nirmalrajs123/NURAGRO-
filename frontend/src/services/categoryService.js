@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const CATEGORIES_URL = 'http://localhost:5000/api/categories';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const CATEGORIES_URL = `${API_BASE}/api/categories`;
 
 export const getCategories = () => axios.get(CATEGORIES_URL);
 export const createCategory = (category) => axios.post(CATEGORIES_URL, category);

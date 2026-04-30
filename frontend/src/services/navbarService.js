@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const NAVBARS_URL = 'http://localhost:5000/api/navbars';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const NAVBARS_URL = `${API_BASE}/api/navbars`;
 
 export const getNavbars = () => axios.get(NAVBARS_URL);
 export const createNavbar = (navbar) => axios.post(NAVBARS_URL, navbar);

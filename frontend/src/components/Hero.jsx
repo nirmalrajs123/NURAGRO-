@@ -1,63 +1,93 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './Hero.css';
+import organicBasket from '../assets/organic_basket.png';
+import { getBanners } from '../services/bannerService';
 
 const Hero = () => {
-  return (
-    <section className="hero">
-      <div className="hero-overlay"></div>
-      <div className="hero-content">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="hero-badge"
-        >
-          <span>Excellence in Engineering</span>
-        </motion.div>
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          Precision Crafted <br /> 
-          <span className="accent-text">Industrial Solutions</span>
-        </motion.h1>
-        
-        <motion.p
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          Leading the way in global distribution and advanced manufacturing technologies. 
-          Our commitment to quality ensures your success.
-        </motion.p>
-        
-        <motion.div 
-          className="hero-cta"
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          <button className="primary-btn">View Our Products</button>
-          <button className="secondary-btn">Learn More</button>
-        </motion.div>
-      </div>
+  const [heroBanner, setHeroBanner] = useState(null);
 
-      <div className="hero-stats">
-        <div className="stat-item">
-          <span className="stat-num">500+</span>
-          <span className="stat-label">Projects</span>
+  useEffect(() => {
+    const fetchHeroBanner = async () => {
+      try {
+        const { data } = await getBanners();
+        const banners = data.data || [];
+        const hero = banners.find(b => b.type === 'hero') || banners[0];
+        if (hero) {
+          setHeroBanner(hero);
+        }
+      } catch (err) {
+        console.error('Failed to fetch hero banner:', err);
+      }
+    };
+    fetchHeroBanner();
+  }, []);
+
+  const title = heroBanner ? heroBanner.title : "Discover the Freshest Organic Groceries Deals!";
+  const subtitle = heroBanner ? heroBanner.subtitle : "100% Organic Shop";
+  const imageSrc = heroBanner 
+    ? (heroBanner.image && heroBanner.image.startsWith('/uploads') 
+        ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${heroBanner.image}` 
+        : heroBanner.image)
+    : organicBasket;
+
+  return (
+    <section 
+      className={`hero-organic ${heroBanner ? 'full-banner' : ''}`}
+      style={heroBanner ? { backgroundImage: `url(${imageSrc})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+    >
+      <div className="hero-organic-container">
+        {/* Left side text content */}
+        <div className="hero-organic-text">
+          <motion.span 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="organic-badge"
+          >
+            {subtitle}
+          </motion.span>
+          
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            style={heroBanner ? { textShadow: '0 2px 10px rgba(0,0,0,0.1)' } : {}}
+          >
+            {title}
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="newsletter-prompt"
+          >
+            Sign Up For The Daily Newsletter
+          </motion.p>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="newsletter-form"
+          >
+            <input type="email" placeholder="Enter your email" className="newsletter-input" />
+            <button className="newsletter-btn">SUBSCRIBE</button>
+          </motion.div>
         </div>
-        <div className="stat-item">
-          <span className="stat-num">24/7</span>
-          <span className="stat-label">Support</span>
-        </div>
-        <div className="stat-item">
-          <span className="stat-num">15+</span>
-          <span className="stat-label">Countries</span>
-        </div>
+
+        {/* Right side image content - only show if not using background mode */}
+        {!heroBanner && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="hero-organic-image"
+          >
+            <img src={imageSrc} alt={title} className="basket-img" />
+          </motion.div>
+        )}
       </div>
     </section>
   );

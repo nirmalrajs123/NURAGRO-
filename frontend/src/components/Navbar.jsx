@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X, Search, User, Heart, ShoppingCart, Grid, Headphones } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getNavbars } from '../services/navbarService';
 import { getCategories } from '../services/categoryService';
@@ -12,6 +12,8 @@ const Navbar = () => {
   const [activeTab, setActiveTab] = useState(window.location.pathname === '/menu' ? 'PRODUCT' : 'HOME');
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [showCatMenu, setShowCatMenu] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +23,6 @@ const Navbar = () => {
         const allNavs = navRes.data;
         const allCats = catRes.data;
 
-        // Recursive function to build category tree
         const buildCategoryTree = (parentId = null) => {
           return allCats
             .filter(cat => cat.parent_id_cat === parentId && cat.is_active === true)
@@ -50,7 +51,6 @@ const Navbar = () => {
                 href: child.path || '#'
               }));
 
-            // If it's the Product menu, inject the recursive category tree
             if (isProduct) {
               const categoryTree = buildCategoryTree(null);
               children = [...children, ...categoryTree];
@@ -59,13 +59,28 @@ const Navbar = () => {
             return {
               id: nav.id,
               name: nav.nav_menu_name.toUpperCase(),
-              href: nav.path || '#',
+              href: nav.nav_menu_name.toUpperCase() === 'HOME' ? '/' : (nav.path || '#'),
               hasChildren: children.length > 0,
               children: children
             };
           });
 
-        setNavItems(topLevel);
+        // If no nav items from DB, add some defaults to match design
+        if (topLevel.length === 0) {
+          setNavItems([
+            { id: 1, name: 'HOME', href: '/', hasChildren: true, children: [] },
+            { id: 2, name: 'SHOP', href: '/shop', hasChildren: true, children: [] },
+            { id: 3, name: 'PAGES', href: '/pages', hasChildren: true, children: [] },
+            { id: 4, name: 'GALLERY', href: '/gallery', hasChildren: true, children: [] },
+            { id: 5, name: 'NEWS', href: '/news', hasChildren: true, children: [] },
+            { id: 6, name: 'CONTACT', href: '/contact', hasChildren: false }
+          ]);
+        } else {
+          setNavItems(topLevel);
+        }
+
+        // Set top-level categories for the search dropdown
+        setCategories(allCats.filter(cat => cat.parent_id_cat === null && cat.is_active === true));
       } catch (err) {
         console.error('Error fetching navbar data', err);
       }
@@ -84,10 +99,8 @@ const Navbar = () => {
     if (item.href.startsWith('/')) {
       navigate(item.href);
     } else {
-      // Handle scroll to section if needed, or just navigate to home first
       if (window.location.pathname !== '/') {
         navigate('/');
-        // Use a timeout or state to scroll after navigation if needed
       }
     }
   };
@@ -102,13 +115,6 @@ const Navbar = () => {
           if (item.href.startsWith('/')) e.preventDefault();
         }}
       >
-        {!isSub && activeTab === item.name && (
-          <motion.div
-            layoutId="active-pill"
-            className="active-bg"
-            transition={{ type: 'spring', duration: 0.5 }}
-          />
-        )}
         <span className="nav-text">{item.name}</span>
         {item.hasChildren && (
           isSub ? <ChevronDown size={12} className="chevron-right" /> : <ChevronDown size={14} className="chevron" />
@@ -126,41 +132,87 @@ const Navbar = () => {
   );
 
   return (
-    <nav className={`nav-container ${isScrolled ? 'scrolled' : ''}`}>
-      <div className="logo-container" onClick={() => navigate('/')}>
-        <img src={logo} alt="Nuragro Logo" className="site-logo" />
+    <header className="main-header">
+      {/* Top Row: Logo, Search, Icons */}
+      <div className="header-top">
+        <div className="header-container">
+          <div className="logo-container" onClick={() => navigate('/')}>
+            <img src={logo} alt="Site Logo" className="site-logo" />
+          </div>
+
+          <div className="search-section">
+            <div 
+              className="category-dropdown-btn"
+              onMouseEnter={() => setShowCatMenu(true)}
+              onMouseLeave={() => setShowCatMenu(false)}
+            >
+              <Menu size={16} />
+              <span>All Categories</span>
+              <ChevronDown size={14} />
+              
+              <AnimatePresence>
+                {showCatMenu && (
+                  <motion.div 
+                    className="cat-dropdown-menu"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                  >
+                    {categories.length > 0 ? (
+                      categories.map(cat => (
+                        <div 
+                          key={cat.id} 
+                          className="cat-item"
+                          onClick={() => {
+                            navigate(cat.path || `/category/${cat.id}`);
+                            setShowCatMenu(false);
+                          }}
+                        >
+                          {cat.category_name}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="cat-item-loading">No categories found</div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            <input type="text" placeholder="Search in product..." className="search-input" />
+            <button className="search-btn">
+              <Search size={18} />
+            </button>
+          </div>
+
+          <div className="icons-section">
+            <button className="icon-circle" onClick={() => navigate('/login')}><User size={18} /></button>
+            
+            <button className="mobile-toggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="pill-wrapper">
-        <div className="pill-nav">
-          <div className="nav-items-desktop">
+      {/* Bottom Row: Navigation Links & Contact */}
+      <div className={`header-bottom ${isScrolled ? 'sticky' : ''}`}>
+        <div className="header-container">
+          <div className="nav-menu">
             {navItems.map((item) => (
               <RenderNavItem key={item.id} item={item} />
             ))}
           </div>
-
-          <button
-            className="mobile-toggle"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X /> : <Menu />}
-          </button>
         </div>
       </div>
 
-      <div className="login-container">
-        <button className="login-btn" onClick={() => navigate('/login')}>
-          Log In
-        </button>
-      </div>
-
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="mobile-menu glass-morphism"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="mobile-menu"
           >
             {navItems.map((item) => (
               <a
@@ -174,12 +226,13 @@ const Navbar = () => {
                 }}
               >
                 {item.name}
+                {item.hasChildren && <ChevronDown size={14} />}
               </a>
             ))}
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   );
 };
 

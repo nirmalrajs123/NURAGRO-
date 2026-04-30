@@ -1,21 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --primary: #412F20;
-  --secondary: #ffffff;
-  --accent: #FCB116; 
-  --success: #7FC847;
-  --bg-main: #ffffff;
-  --text-main: #1a1a1a;
-  --text-muted: #666666;
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --pill-bg: rgba(255, 255, 255, 0.1);
-  --pill-active: #ffffff;
-  --pill-active-text: #000000;
+  --agro-green: #2B7A3E; /* Logo Primary Green */
+  --agro-brown: #8B5A2B; /* Logo Earthy Brown */
+  --agro-lime: #A4C639;  /* Logo Leaf Accent */
+  --agro-orange: #faa300;
+  --agro-cream: #FBFBF9;
+  --agro-text: #1A1D16;
+  --agro-muted: #555C4D;
   
-  --font-inter: 'Inter', sans-serif;
-  --font-outfit: 'Outfit', sans-serif;
+  --font-main: 'Outfit', sans-serif;
 }
 
 * {
@@ -25,16 +19,17 @@
 }
 
 body {
-  font-family: var(--font-inter);
-  background-color: var(--bg-main);
-  color: var(--text-main);
+  font-family: var(--font-main);
+  background-color: #ffffff;
+  color: var(--agro-text);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 {
-  font-family: var(--font-outfit);
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-main);
   font-weight: 700;
+  color: var(--agro-green);
 }
 
 a {
@@ -47,14 +42,7 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
-  font-family: var(--font-inter);
-}
-
-.glass-morphism {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
+  font-family: var(--font-main);
 }
 
 /* Custom Scrollbar */
@@ -67,10 +55,10 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ccc;
+  background: var(--agro-green);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #aaa;
+  background: var(--agro-brown);
 }

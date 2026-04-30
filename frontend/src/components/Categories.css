@@ -1,0 +1,135 @@
+.categories-section {
+  padding: 80px 5%;
+  background-color: #ffffff;
+}
+
+.categories-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.categories-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 50px;
+  border-bottom: none; /* Removed border to match design */
+  padding-bottom: 0;
+}
+
+.header-title-area .sub-title {
+  font-family: 'Great Vibes', 'Brush Script MT', cursive;
+  color: #faa300;
+  font-size: 28px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.header-title-area h2 {
+  font-size: 38px;
+  font-weight: 800;
+  color: #1A1D16;
+  margin: 0;
+}
+
+.slider-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.control-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.control-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.control-btn.orange {
+  background-color: #faa300;
+}
+
+.control-btn.green {
+  background-color: #2B7A3E;
+}
+
+.categories-slider {
+  display: flex;
+  gap: 25px;
+  overflow-x: auto;
+  padding: 20px 0;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.categories-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.category-card {
+  display: flex;
+  align-items: center;
+  background-color: #FBFBF9;
+  padding: 15px 25px;
+  border-radius: 100px;
+  gap: 20px;
+  flex: 0 0 auto;
+  min-width: 260px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.category-card:hover {
+  background-color: #ffffff;
+  border-color: #2B7A3E;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  transform: translateY(-5px);
+}
+
+.icon-wrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+
+.card-info h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1A1D16;
+  margin: 0 0 4px 0;
+}
+
+.card-info span {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .categories-header {
+    flex-direction: row; /* Keep row for buttons */
+    align-items: flex-end;
+  }
+  .header-title-area h2 {
+    font-size: 28px;
+  }
+}
+

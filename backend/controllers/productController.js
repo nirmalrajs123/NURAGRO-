@@ -13,7 +13,11 @@ exports.getProducts = async (req, res) => {
     const result = await pool.query(`
       SELECT p.*, c.category_name,
       (SELECT json_agg(t.* ORDER BY t.id ASC) FROM "Type" t WHERE t.product_id = p.id) as type_options,
-      (SELECT json_agg(pk.* ORDER BY pk.id ASC) FROM "packing" pk WHERE pk.product_id = p.id) as packing_options
+      (SELECT json_agg(pk.* ORDER BY pk.id ASC) FROM "packing" pk WHERE pk.product_id = p.id) as packing_options,
+      (SELECT json_agg(json_build_object('id', n.id, 'parent_id', n.parent_id, 'name', n.nutrition_name, 'amount', pn.value, 'dv', pn.daily_value, 'display', pn.display, 'order', pn.order) ORDER BY pn.order ASC, pn.id ASC) 
+       FROM "product_nutrition" pn 
+       LEFT JOIN "nutrition" n ON pn.nutrition_item = n.id 
+       WHERE pn.product_id = p.id) as nutrition_options
       FROM "Products" p 
       LEFT JOIN "Categories" c ON p.category_id = c.id 
       WHERE p.is_delete = false 
@@ -23,6 +27,31 @@ exports.getProducts = async (req, res) => {
     res.json(result.rows);
   } catch (err) {
     console.error('Error in getProducts:', err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(`
+      SELECT p.*, c.category_name,
+      (SELECT json_agg(t.* ORDER BY t.id ASC) FROM "Type" t WHERE t.product_id = p.id) as type_options,
+      (SELECT json_agg(pk.* ORDER BY pk.id ASC) FROM "packing" pk WHERE pk.product_id = p.id) as packing_options,
+      (SELECT json_agg(json_build_object('id', n.id, 'parent_id', n.parent_id, 'name', n.nutrition_name, 'amount', pn.value, 'dv', pn.daily_value, 'display', pn.display, 'order', pn.order) ORDER BY pn.order ASC, pn.id ASC) 
+       FROM "product_nutrition" pn 
+       LEFT JOIN "nutrition" n ON pn.nutrition_item = n.id 
+       WHERE pn.product_id = p.id) as nutrition_options
+      FROM "Products" p 
+      LEFT JOIN "Categories" c ON p.category_id = c.id 
+      WHERE (p.id::text = $1 OR p.slug_text = $1) AND p.is_delete = false
+    `, [id]);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
@@ -37,12 +66,13 @@ exports.createProduct = async (req, res) => {
       is_active, calories, total_fat, saturated_fat, cholesterol, sodium,
       potassium, total_carbohydrate, dietary_fiber, sugars, protein,
       vitamins, description_facts, weight, packing_details, facts,
-      type_options, packing_options
+      type_options, packing_options, nutrition_options, special, trending, best_seller, featured_products, new_arrival_products
     } = req.body;
 
     // Standardize data types
     if (typeof type_options === 'string') type_options = JSON.parse(type_options);
     if (typeof packing_options === 'string') packing_options = JSON.parse(packing_options);
+    if (typeof nutrition_options === 'string') nutrition_options = JSON.parse(nutrition_options);
     if (category_id === 'null' || category_id === '' || isNaN(category_id)) category_id = null;
 
     // Extract file paths from multer req.files (upload.any())
@@ -55,7 +85,8 @@ exports.createProduct = async (req, res) => {
       'is_active', 'image', 'packing', 'calories', 'total_fat', 'saturated_fat',
       'cholesterol', 'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber',
       'sugars', 'protein', 'vitamins', 'description_facts', 'weight',
-      'packing_details', 'spec_file', 'nutrition_file', 'facts'
+      'packing_details', 'spec_file', 'nutrition_file', 'facts', 'special', 'trending', 'best_seller',
+      'featured_products', 'new_arrival_products'
     ];
 
     const data = {
@@ -63,7 +94,7 @@ exports.createProduct = async (req, res) => {
       is_active, image, packing: req.body.packing, calories, total_fat, saturated_fat,
       cholesterol, sodium, potassium, total_carbohydrate, dietary_fiber,
       sugars, protein, vitamins, description_facts, weight,
-      packing_details, spec_file, nutrition_file, facts
+      packing_details, spec_file, nutrition_file, facts, special
     };
 
     const placeholders = fields.map((_, i) => `$${i + 1}`).join(', ');
@@ -116,6 +147,25 @@ exports.createProduct = async (req, res) => {
       }
     }
 
+    // Handle Nutrition Metrics
+    if (nutrition_options && Array.isArray(nutrition_options)) {
+      for (let opt of nutrition_options) {
+        const nutRes = await client.query('SELECT id FROM "nutrition" WHERE nutrition_name = $1', [opt.name]);
+        const nutId = nutRes.rows[0] ? nutRes.rows[0].id : null;
+        const val = parseInt(opt.amount) || 0;
+        const dv = parseInt(opt.dv) || 0;
+        const display = opt.display !== false;
+        const order = parseInt(opt.order) || 0;
+
+        if (nutId || opt.name) {
+          await client.query(
+            'INSERT INTO "product_nutrition" (product_id, nutrition_item, value, daily_value, display, "order", "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())',
+            [productId, nutId, val, dv, display, order]
+          );
+        }
+      }
+    }
+
     await client.query('COMMIT');
     res.status(201).json({ id: productId, message: 'Product created successfully' });
   } catch (err) {
@@ -138,11 +188,12 @@ exports.updateProduct = async (req, res) => {
       is_active, calories, total_fat, saturated_fat, cholesterol, sodium,
       potassium, total_carbohydrate, dietary_fiber, sugars, protein,
       vitamins, description_facts, weight, packing_details, facts,
-      type_options, packing_options
+      type_options, packing_options, nutrition_options, special, trending, best_seller, featured_products, new_arrival_products
     } = req.body;
 
     if (typeof type_options === 'string') type_options = JSON.parse(type_options);
     if (typeof packing_options === 'string') packing_options = JSON.parse(packing_options);
+    if (typeof nutrition_options === 'string') nutrition_options = JSON.parse(nutrition_options);
     if (category_id === 'null' || category_id === '' || isNaN(category_id)) category_id = null;
 
     const image = getFilePath(req.files, 'image') || req.body.image;
@@ -154,7 +205,8 @@ exports.updateProduct = async (req, res) => {
       'is_active', 'image', 'packing', 'calories', 'total_fat', 'saturated_fat',
       'cholesterol', 'sodium', 'potassium', 'total_carbohydrate', 'dietary_fiber',
       'sugars', 'protein', 'vitamins', 'description_facts', 'weight',
-      'packing_details', 'spec_file', 'nutrition_file', 'facts'
+      'packing_details', 'spec_file', 'nutrition_file', 'facts', 'special', 'trending', 'best_seller',
+      'featured_products', 'new_arrival_products'
     ];
 
     const data = {
@@ -162,7 +214,7 @@ exports.updateProduct = async (req, res) => {
       is_active, image, packing: req.body.packing, calories, total_fat, saturated_fat,
       cholesterol, sodium, potassium, total_carbohydrate, dietary_fiber,
       sugars, protein, vitamins, description_facts, weight,
-      packing_details, spec_file, nutrition_file, facts
+      packing_details, spec_file, nutrition_file, facts, special
     };
 
     const setClause = fields.map((f, i) => `"${f}" = $${i + 1}`).join(', ');
@@ -215,6 +267,26 @@ exports.updateProduct = async (req, res) => {
       }
     }
 
+    // Refresh Nutrition Metrics
+    await client.query('DELETE FROM "product_nutrition" WHERE product_id = $1', [id]);
+    if (nutrition_options && Array.isArray(nutrition_options)) {
+      for (let opt of nutrition_options) {
+        const nutRes = await client.query('SELECT id FROM "nutrition" WHERE nutrition_name = $1', [opt.name]);
+        const nutId = nutRes.rows[0] ? nutRes.rows[0].id : null;
+        const val = parseInt(opt.amount) || 0;
+        const dv = parseInt(opt.dv) || 0;
+        const display = opt.display !== false;
+        const order = parseInt(opt.order) || 0;
+
+        if (nutId || opt.name) {
+          await client.query(
+            'INSERT INTO "product_nutrition" (product_id, nutrition_item, value, daily_value, display, "order", "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())',
+            [id, nutId, val, dv, display, order]
+          );
+        }
+      }
+    }
+
     await client.query('COMMIT');
     res.json({ message: 'Product updated successfully' });
   } catch (err) {
@@ -231,6 +303,91 @@ exports.deleteProduct = async (req, res) => {
     const { id } = req.params;
     await pool.query('UPDATE "Products" SET is_delete = true, "updatedAt" = NOW() WHERE id = $1', [id]);
     res.json({ message: 'Product deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.toggleSpecial = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { special } = req.body;
+    await pool.query('UPDATE "Products" SET special = $1, "updatedAt" = NOW() WHERE id = $2', [special, id]);
+    res.json({ message: 'Product special status updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.toggleTrending = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { trending } = req.body;
+    await pool.query('UPDATE "Products" SET trending = $1, "updatedAt" = NOW() WHERE id = $2', [trending, id]);
+    res.json({ message: 'Product trending status updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.toggleBestSeller = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { best_seller } = req.body;
+    await pool.query('UPDATE "Products" SET best_seller = $1, "updatedAt" = NOW() WHERE id = $2', [best_seller, id]);
+    res.json({ message: 'Product best seller status updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.toggleFeaturedProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { featured_products } = req.body;
+    await pool.query('UPDATE "Products" SET featured_products = $1, "updatedAt" = NOW() WHERE id = $2', [featured_products, id]);
+    res.json({ message: 'Product featured status updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.toggleNewArrivalProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { new_arrival_products } = req.body;
+    await pool.query('UPDATE "Products" SET new_arrival_products = $1, "updatedAt" = NOW() WHERE id = $2', [new_arrival_products, id]);
+    res.json({ message: 'Product new arrival status updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getProductSeo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      'SELECT id, focus_keyphrase, slug_text, seo_title, meta_description FROM "Products" WHERE id = $1',
+      [id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.updateProductSeo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { focus_keyphrase, slug_text, seo_title, meta_description } = req.body;
+    await pool.query(
+      'UPDATE "Products" SET focus_keyphrase = $1, slug_text = $2, seo_title = $3, meta_description = $4, "updatedAt" = NOW() WHERE id = $5',
+      [focus_keyphrase, slug_text, seo_title, meta_description, id]
+    );
+    res.json({ message: 'Product SEO updated successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

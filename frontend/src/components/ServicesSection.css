@@ -1,0 +1,211 @@
+.services-section {
+  background-color: #2B7A3E; /* Logo Primary Green */
+  padding: 120px 40px;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.services-section::before {
+  content: '';
+  position: absolute;
+  top: -150px;
+  left: -150px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #A4C639 0%, transparent 70%);
+  opacity: 0.15;
+  filter: blur(80px);
+}
+
+.services-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.services-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: #A4C639;
+  margin-bottom: 20px;
+}
+
+.services-title {
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin: 0;
+  line-height: 1;
+}
+
+.services-carousel-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 40px;
+}
+
+.carousel-nav-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(10px);
+}
+
+.carousel-nav-btn:hover {
+  background: #A4C639;
+  color: #2B7A3E;
+  transform: scale(1.1);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  width: 100%;
+}
+
+.service-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px 80px 24px 80px; /* Modern asymmetric shape */
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  background: #A4C639;
+  opacity: 0;
+  border-radius: 40px 0 0 0;
+  transition: all 0.5s ease;
+  z-index: 0;
+}
+
+.service-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(164, 198, 57, 0.3);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+}
+
+.service-card:hover::after {
+  opacity: 0.1;
+}
+
+.service-img-wrapper {
+  width: 100%;
+  height: 280px;
+  border-radius: 12px 60px 12px 60px;
+  overflow: hidden;
+  margin-bottom: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.service-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.service-card:hover .service-img-wrapper img {
+  transform: scale(1.15) rotate(2deg);
+}
+
+.service-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  z-index: 1;
+}
+
+.service-content h3 {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 16px 0;
+  color: #ffffff;
+  letter-spacing: -1px;
+}
+
+.divider-line-light {
+  height: 2px !important;
+  background: linear-gradient(to right, #A4C639 0%, transparent 100%) !important;
+  margin-bottom: 20px !important;
+  opacity: 0.5;
+}
+
+.service-content p {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.7;
+  margin: 0 0 32px 0;
+  flex: 1;
+  font-weight: 300;
+}
+
+.view-details {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #A4C639;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+}
+
+.view-details:hover {
+  letter-spacing: 4px;
+}
+
+@media (max-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .carousel-nav-btn {
+    display: none;
+  }
+  .services-carousel-container {
+    padding: 0 20px;
+  }
+  .services-title {
+    font-size: 36px;
+  }
+  .service-card {
+    border-radius: 20px 40px 20px 40px;
+  }
+}

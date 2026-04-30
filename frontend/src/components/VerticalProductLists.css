@@ -1,0 +1,212 @@
+.vertical-lists-section {
+  padding: 40px 0 60px;
+  background-color: #fff;
+}
+
+.vertical-lists-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 40px;
+  align-items: stretch;
+}
+
+.lists-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+/* Column Header */
+.product-list-column .column-header {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.product-list-column h3 {
+  font-size: 20px;
+  color: #1c1917;
+  margin: 0 0 12px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+}
+
+.column-line {
+  height: 2px;
+  background-color: #eef2ec;
+  width: 100%;
+}
+
+.column-line::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 2px;
+  background-color: #15803d;
+}
+
+/* Product Row Item */
+.column-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.compact-product-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.compact-product-card:hover {
+  transform: translateX(5px);
+}
+
+.compact-img-wrapper {
+  width: 80px;
+  height: 80px;
+  background-color: #f8faf7;
+  border: 1px solid #eef2ec;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.compact-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.compact-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.compact-cat {
+  font-size: 12px;
+  color: #84cc16;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.compact-info h4 {
+  font-size: 15px;
+  color: #1c1917;
+  margin: 0 0 6px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+}
+
+.compact-price {
+  font-size: 15px;
+  color: #15803d;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.compact-stars {
+  display: flex;
+  gap: 2px;
+}
+
+/* Tall Dairy Banner */
+.tall-dairy-banner {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px 30px;
+}
+
+.tall-banner-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.tall-dairy-banner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 30%, rgba(28, 25, 23, 0.85) 100%);
+  z-index: 2;
+}
+
+.tall-banner-overlay {
+  position: relative;
+  z-index: 3;
+}
+
+.banner-tag {
+  font-size: 13px;
+  color: #a3e635;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.tall-banner-overlay h2 {
+  color: #fff;
+  font-size: 28px;
+  line-height: 1.3;
+  margin: 0 0 25px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+}
+
+.banner-btn {
+  background-color: #f97316;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 14px 32px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.banner-btn:hover {
+  background-color: #ea580c;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 1024px) {
+  .vertical-lists-container {
+    grid-template-columns: 1fr;
+  }
+  .tall-dairy-banner {
+    min-height: 350px;
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .lists-grid {
+    grid-template-columns: 1fr;
+  }
+}

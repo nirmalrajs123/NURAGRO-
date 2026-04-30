@@ -18,10 +18,17 @@ const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const navbarRoutes = require('./routes/navbarRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const bannerRoutes = require('./routes/bannerRoutes');
+const seoRoutes = require('./routes/seoRoutes');
+const nutritionRoutes = require('./routes/nutritionRoutes');
+
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/navbars', navbarRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/banners', bannerRoutes);
+app.use('/api/seo', seoRoutes);
+app.use('/api/nutrition', nutritionRoutes);
 
 // Start Server and Seed Database
 const startServer = async () => {
