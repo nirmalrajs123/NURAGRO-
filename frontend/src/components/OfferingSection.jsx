@@ -103,7 +103,7 @@ const OfferingSection = () => {
                       className="db-icon-img"
                     />
                   ) : (
-                    <item.Icon size={40} strokeWidth={1.5} />
+                    <item.Icon size={80} strokeWidth={1} />
                   )}
                 </div>
               </div>

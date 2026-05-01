@@ -1579,13 +1579,6 @@ const BannerPage = () => {
                 <input type="text" value={formData.subtitle} onChange={e => setFormData({ ...formData, subtitle: e.target.value })} />
               </div>
               <div className="form-group-light">
-                <label>Banner Placement Type</label>
-                <select value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}>
-                  <option value="tall">Promo Grid (Tall Banner)</option>
-                  <option value="hero">Homepage Hero (Top Slider)</option>
-                </select>
-              </div>
-              <div className="form-group-light">
                 <label>Promo Graphic</label>
                 <input
                   type="file"

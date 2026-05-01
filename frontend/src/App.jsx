@@ -18,7 +18,6 @@ const Home = () => (
   <main>
     <Hero />
     <OfferingSection />
-    <PromoCards />
     <SpecialOffers />
     <TrendingProducts />
     <VerticalProductLists />
@@ -26,7 +25,7 @@ const Home = () => (
     <Certifications />
     <section id="about" className="content-section dark">
       <div className="section-header">
-        <h2 style={{color: 'white'}}>About Nuragro</h2>
+        <h2 style={{ color: 'white' }}>About Nuragro</h2>
         <div className="underline"></div>
       </div>
       <div className="about-content">
@@ -45,7 +44,7 @@ const AppContent = () => {
   return (
     <div className="app">
       {!isAuthPage && <Navbar />}
-      
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />

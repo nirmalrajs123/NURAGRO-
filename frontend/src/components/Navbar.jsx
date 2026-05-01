@@ -42,7 +42,7 @@ const Navbar = () => {
           .filter(nav => nav.parent_id === null && nav.is_active === 1)
           .map(nav => {
             const isProduct = nav.nav_menu_name.toUpperCase() === 'PRODUCT';
-            
+
             let children = allNavs
               .filter(n => n.parent_id === nav.id && n.is_active === 1)
               .map(child => ({
@@ -140,53 +140,10 @@ const Navbar = () => {
             <img src={logo} alt="Site Logo" className="site-logo" />
           </div>
 
-          <div className="search-section">
-            <div 
-              className="category-dropdown-btn"
-              onMouseEnter={() => setShowCatMenu(true)}
-              onMouseLeave={() => setShowCatMenu(false)}
-            >
-              <Menu size={16} />
-              <span>All Categories</span>
-              <ChevronDown size={14} />
-              
-              <AnimatePresence>
-                {showCatMenu && (
-                  <motion.div 
-                    className="cat-dropdown-menu"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                  >
-                    {categories.length > 0 ? (
-                      categories.map(cat => (
-                        <div 
-                          key={cat.id} 
-                          className="cat-item"
-                          onClick={() => {
-                            navigate(cat.path || `/category/${cat.id}`);
-                            setShowCatMenu(false);
-                          }}
-                        >
-                          {cat.category_name}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="cat-item-loading">No categories found</div>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <input type="text" placeholder="Search in product..." className="search-input" />
-            <button className="search-btn">
-              <Search size={18} />
-            </button>
-          </div>
-
           <div className="icons-section">
-            <button className="icon-circle" onClick={() => navigate('/login')}><User size={18} /></button>
-            
+            <button className="icon-circle" onClick={() => navigate('/login')}>
+              <User size={18} />
+            </button>
             <button className="mobile-toggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>

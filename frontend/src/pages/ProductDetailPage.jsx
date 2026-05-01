@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/productService';
-import ServicesSection from '../components/ServicesSection';
+
 import ProductPackingSection from '../components/ProductPackingSection';
 import './ProductDetailPage.css';
 
@@ -72,7 +72,7 @@ const ProductDetailPage = () => {
   }
 
   const badgeText = product.special === 1 ? 'Special' : product.trending === 1 ? 'Trending' : product.best_seller === 1 ? 'Best Seller' : 'Popular';
-  const imageSrc = product.image ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'}${product.image.startsWith('/') ? '' : '/'}${product.image}` : 'https://via.placeholder.com/500?text=No+Image';
+  const imageSrc = product.image ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${product.image.startsWith('/') ? '' : '/'}${product.image}` : 'https://via.placeholder.com/500?text=No+Image';
 
   return (
     <>
@@ -121,8 +121,8 @@ const ProductDetailPage = () => {
           </div>
         </div>
       </div>
-      <ServicesSection typeOptions={product?.type_options} />
-      <ProductPackingSection packingOptions={product?.packing_options} />
+
+
 
       {(product.spec_file || product.nutrition_file || (product.nutrition_options && product.nutrition_options.length > 0 && product.nutrition_options.some(n => n.display))) && (
         <section className="product-nutrition-section">
@@ -142,7 +142,7 @@ const ProductDetailPage = () => {
                     <div className="pdf-viewer-placeholder">
                       <p>Product specification document available.</p>
                       <a
-                        href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'}${product.spec_file.startsWith('/') ? '' : '/'}${product.spec_file}`}
+                        href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${product.spec_file.startsWith('/') ? '' : '/'}${product.spec_file}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="view-pdf-btn"
@@ -153,7 +153,7 @@ const ProductDetailPage = () => {
                   ) : (
                     <div className="nutrition-img-frame">
                       <img
-                        src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'}${product.spec_file.startsWith('/') ? '' : '/'}${product.spec_file}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${product.spec_file.startsWith('/') ? '' : '/'}${product.spec_file}`}
                         alt="Specifications Sheet"
                         className="nutrition-sheet-img"
                       />
@@ -197,7 +197,7 @@ const ProductDetailPage = () => {
                               return roots.map((root, i) => {
                                 // SECURE MATCHING: Only match children if root has a valid ID, to prevent null == null bugs
                                 const children = root.id ? mainNutrients.filter(n => n.parent_id === root.id) : [];
-                                
+
                                 return (
                                   <React.Fragment key={`root-group-${i}`}>
                                     <div style={{
@@ -213,7 +213,7 @@ const ProductDetailPage = () => {
                                       </div>
                                       {root.dv && <div><strong style={{ fontWeight: '700' }}>{root.dv}%</strong></div>}
                                     </div>
-                                    
+
                                     {children.map((child, j) => (
                                       <div key={`child-${i}-${j}`} style={{
                                         display: 'flex',
@@ -268,7 +268,7 @@ const ProductDetailPage = () => {
                     <div className="pdf-viewer-placeholder">
                       <p>Nutrition breakdown document available.</p>
                       <a
-                        href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'}${product.nutrition_file.startsWith('/') ? '' : '/'}${product.nutrition_file}`}
+                        href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${product.nutrition_file.startsWith('/') ? '' : '/'}${product.nutrition_file}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="view-pdf-btn"
@@ -279,7 +279,7 @@ const ProductDetailPage = () => {
                   ) : (
                     <div className="nutrition-img-frame">
                       <img
-                        src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'}${product.nutrition_file.startsWith('/') ? '' : '/'}${product.nutrition_file}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${product.nutrition_file.startsWith('/') ? '' : '/'}${product.nutrition_file}`}
                         alt="Nutrition Sheet"
                         className="nutrition-sheet-img"
                       />

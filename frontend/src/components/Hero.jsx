@@ -25,21 +25,21 @@ const Hero = () => {
 
   const title = heroBanner ? heroBanner.title : "Discover the Freshest Organic Groceries Deals!";
   const subtitle = heroBanner ? heroBanner.subtitle : "100% Organic Shop";
-  const imageSrc = heroBanner 
-    ? (heroBanner.image && heroBanner.image.startsWith('/uploads') 
-        ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${heroBanner.image}` 
-        : heroBanner.image)
+  const imageSrc = heroBanner
+    ? (heroBanner.image && heroBanner.image.startsWith('/uploads')
+      ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${heroBanner.image}`
+      : heroBanner.image)
     : organicBasket;
 
   return (
-    <section 
+    <section
       className={`hero-organic ${heroBanner ? 'full-banner' : ''}`}
       style={heroBanner ? { backgroundImage: `url(${imageSrc})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
     >
       <div className="hero-organic-container">
         {/* Left side text content */}
         <div className="hero-organic-text">
-          <motion.span 
+          <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -47,7 +47,7 @@ const Hero = () => {
           >
             {subtitle}
           </motion.span>
-          
+
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -57,29 +57,14 @@ const Hero = () => {
             {title}
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="newsletter-prompt"
-          >
-            Sign Up For The Daily Newsletter
-          </motion.p>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="newsletter-form"
-          >
-            <input type="email" placeholder="Enter your email" className="newsletter-input" />
-            <button className="newsletter-btn">SUBSCRIBE</button>
-          </motion.div>
+
+
         </div>
 
         {/* Right side image content - only show if not using background mode */}
         {!heroBanner && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}

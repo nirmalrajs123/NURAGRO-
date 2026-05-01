@@ -1,11 +1,13 @@
 .offering-section {
-  padding: 80px 5%;
-  background-color: #ffffff;
+  padding: 80px 5% 20px 5%;
+  background-color: #F7F5F0;
+  /* Matching reference cream color */
   text-align: center;
 }
 
 .offering-container {
-  max-width: 1200px;
+  max-width: 1400px;
+  /* Increased to accommodate 5 cards comfortably */
   margin: 0 auto;
 }
 
@@ -20,13 +22,15 @@
 .offering-subtitle {
   font-family: 'Great Vibes', 'Brush Script MT', cursive;
   color: #2B7A3E;
-  font-size: 28px;
+  font-size: 50px;
+  /* Increased from 28px */
   display: block;
   margin-bottom: 10px;
 }
 
 .offering-title {
-  font-size: 42px;
+  font-size: 32px;
+  /* Increased from 42px */
   font-weight: 800;
   color: #1A1D16;
   margin: 0;
@@ -43,7 +47,7 @@
   height: 50px;
   border-radius: 50%;
   border: 2px solid #e0e0e0;
-  background: transparent;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,11 +69,13 @@
 
 .offering-slider {
   display: flex;
-  gap: 30px;
+  gap: 25px;
   overflow-x: auto;
   scroll-behavior: smooth;
   padding: 20px 0 40px 0;
   -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  /* Better scrolling UX */
 }
 
 .offering-slider::-webkit-scrollbar {
@@ -79,7 +85,7 @@
 
 .offering-card {
   position: relative;
-  background-color: #FBFBF9;
+  background-color: #ffffff;
   padding: 40px 20px;
   border-radius: 4px;
   transition: all 0.3s ease;
@@ -88,14 +94,38 @@
   align-items: center;
   cursor: pointer;
   z-index: 1;
-  flex: 0 0 230px; /* Fixed width for slider items */
+  flex: 0 0 calc((100% - 100px) / 5);
+  /* Fits exactly 5 cards with 25px gaps */
+  scroll-snap-align: start;
 }
 
-.offering-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+/* Make the 3rd card green by default */
+.offering-card:nth-child(3) {
   background-color: #2B7A3E;
   color: #ffffff;
+  transform: translateY(-10px);
+}
+
+.offering-card:nth-child(3) .offering-count {
+  color: #ffffff;
+}
+
+/* On hover, swap colors: normal cards turn green, 3rd card turns white */
+.offering-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+  background-color: #2B7A3E;
+  color: #ffffff;
+}
+
+.offering-card:nth-child(3):hover {
+  background-color: #ffffff;
+  color: #1A1D16;
+  transform: translateY(0);
+}
+
+.offering-card:nth-child(3):hover .offering-count {
+  color: #2B7A3E;
 }
 
 .offering-icon-wrapper {
@@ -103,26 +133,28 @@
 }
 
 .offering-icon-circle {
-  width: 100px;
-  height: 100px;
+  width: 140px;
+  height: 140px;
   background-color: #ffffff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #2B7A3E;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-  overflow: hidden; /* Ensure image doesn't overflow */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  /* Ensure image doesn't overflow */
 }
 
 .db-icon-img {
-  width: 60%;
-  height: 60%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .offering-info .offering-count {
-  font-size: 14px;
+  font-size: 16px;
+  /* Increased from 14px */
   font-weight: 500;
   color: #2B7A3E;
   display: block;
@@ -136,14 +168,16 @@
 }
 
 .offering-name {
-  font-size: 20px;
+  font-size: 24px;
+  /* Increased from 20px */
   font-weight: 700;
   color: inherit;
   margin: 0;
 }
 
-/* Brush Border Effect on Hover */
-.offering-card:hover::before {
+/* Brush Border Effect */
+.offering-card:hover::before,
+.offering-card:nth-child(3)::before {
   content: '';
   position: absolute;
   top: -12px;
@@ -158,6 +192,10 @@
   filter: blur(0.5px);
 }
 
+.offering-card:nth-child(3):hover::before {
+  display: none;
+}
+
 .brush-border {
   position: absolute;
   top: -10px;
@@ -170,16 +208,19 @@
   border-radius: 8px;
   opacity: 0;
   transition: opacity 0.3s ease;
-  clip-path: polygon(
-    1% 2%, 24% 0%, 52% 3%, 76% 1%, 99% 2%, 
-    100% 26%, 98% 52%, 99% 74%, 98% 99%,
-    76% 98%, 51% 100%, 26% 97%, 2% 99%,
-    1% 74%, 2% 51%, 0% 26%
-  );
+  clip-path: polygon(1% 2%, 24% 0%, 52% 3%, 76% 1%, 99% 2%,
+      100% 26%, 98% 52%, 99% 74%, 98% 99%,
+      76% 98%, 51% 100%, 26% 97%, 2% 99%,
+      1% 74%, 2% 51%, 0% 26%);
 }
 
-.offering-card:hover .brush-border {
+.offering-card:hover .brush-border,
+.offering-card:nth-child(3) .brush-border {
   opacity: 1;
+}
+
+.offering-card:nth-child(3):hover .brush-border {
+  opacity: 0;
 }
 
 @media (max-width: 768px) {

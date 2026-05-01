@@ -64,38 +64,49 @@ const TrendingProducts = () => {
             <button className="see-more-btn">SEE MORE »</button>
           </div>
 
-          <div className="trending-cards-grid">
+          <div className="offers-grid">
             {displayProducts.length === 0 ? (
-              <div style={{ color: '#aaa', gridColumn: '1 / -1', textAlign: 'center', padding: '40px 0', fontSize: '16px' }}>
+              <div
+                style={{
+                  color: '#aaa',
+                  gridColumn: '1 / -1',
+                  textAlign: 'center',
+                  padding: '40px 0',
+                  fontSize: '16px'
+                }}
+              >
                 No trending products available at the moment.
               </div>
-            ) : displayProducts.map(item => (
-              <motion.div
-                key={item.id}
-                className="trending-card"
-                style={{ cursor: 'pointer' }}
-                onClick={() => navigate(`/product/${item.slug_text || item.id}`)}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className="card-top">
-                  <span className={`badge ${item.badge.toLowerCase().replace('%', '')}`}>{item.badge}</span>
-                  <div className="card-image-wrapper">
-                    <img src={item.img} alt={item.title} className="card-img" />
+            ) : (
+              displayProducts.map(item => (
+                <motion.div
+                  key={item.id}
+                  className="offer-card"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => navigate(`/product/${item.slug_text || item.id}`)}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: item.id * 0.1 }}
+                  whileHover={{
+                    scale: 1.05,
+                    y: -12,
+                    transition: { type: "spring", stiffness: 400, damping: 12 }
+                  }}
+                >
+                  <div className="offer-card-header">
+                    <div className="header-text">
+                      <span className="card-category">{item.category}</span>
+                      <h3 className="card-title">{item.title}</h3>
+                    </div>
                   </div>
 
-                </div>
-
-                <div className="card-bottom">
-                  <span className="card-category">{item.category}</span>
-                  <h3>{item.title}</h3>
-
-
-                </div>
-              </motion.div>
-            ))}
+                  <div className="card-image-section">
+                    <img src={item.img} alt={item.title} className="offer-img" />
+                  </div>
+                </motion.div>
+              ))
+            )}
           </div>
         </div>
 

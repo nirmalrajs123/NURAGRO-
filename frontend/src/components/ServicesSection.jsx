@@ -34,52 +34,32 @@ const ServicesSection = ({ typeOptions = [] }) => {
     <section className="services-section">
       <div className="services-header">
         <div className="services-tag">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '6px'}}><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
           {isDynamic ? 'PRODUCT TYPES' : 'OUR SERVICE'}
         </div>
         <h2 className="services-title">{isDynamic ? 'Available Type Variations' : 'Sustainable Growth For Farms'}</h2>
       </div>
 
-      <div className="services-carousel-container">
-        <button className="carousel-nav-btn left">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        </button>
-
-        <div className="services-grid">
-          {services.map((service, index) => {
-            const inverted = index === 1; // Middle card is inverted
-
-            return (
-              <div key={service.id} className={`service-card ${inverted ? 'inverted' : ''}`}>
-                {!inverted && (
-                  <div className="service-img-wrapper">
-                    <img src={service.img} alt={service.title} />
-                  </div>
-                )}
-                
-                <div className="service-content">
-                  <h3>{service.title}</h3>
-                  <div className="divider-line-light" style={{height: '1px', background: '#f3f4f6', margin: '0 0 15px 0'}}></div>
-                  <p>{service.desc}</p>
-                  <div className="view-details">
-                    View Details
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: '6px'}}><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                  </div>
-                </div>
-
-                {inverted && (
-                  <div className="service-img-wrapper bottom">
-                    <img src={service.img} alt={service.title} />
-                  </div>
-                )}
+      <div className="services-grid">
+        {services.map((service) => {
+          return (
+            <div key={service.id} className="service-card">
+              <div className="service-img-wrapper">
+                <img src={service.img} alt={service.title} />
               </div>
-            );
-          })}
-        </div>
 
-        <button className="carousel-nav-btn right">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
+              <div className="service-content">
+                <h3>{service.title}</h3>
+                <div className="divider-line-light" style={{ height: '1px', background: '#f3f4f6', margin: '0 0 15px 0' }}></div>
+                <p>{service.desc}</p>
+                <div className="view-details">
+                  View Details
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '6px' }}><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

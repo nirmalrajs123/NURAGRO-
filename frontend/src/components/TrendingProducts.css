@@ -1,7 +1,7 @@
 .trending-section {
-  background-color: #111111;
+  background-color: #fdfdf3; /* Light cream background */
   padding: 80px 5%;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 
 .trending-container {
@@ -24,7 +24,7 @@
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(43, 122, 62, 0.15);
 }
 
 .promo-tag {
@@ -84,7 +84,7 @@
 }
 
 .trending-header-row h2 {
-  color: white;
+  color: #111; /* Dark text on light background */
   font-size: 32px;
   font-weight: 900;
   white-space: nowrap;
@@ -93,7 +93,7 @@
 .header-line {
   flex-grow: 1;
   height: 1px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .see-more-btn {

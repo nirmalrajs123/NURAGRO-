@@ -87,25 +87,8 @@ const SpecialOffers = () => {
     <section className="special-offers-section">
       <div className="special-offers-container">
         <div className="special-offers-header">
-          <h2>Special Offers on Products</h2>
-          <div className="countdown-timer">
-            <div className="timer-block">
-              <span className="timer-num">{timeLeft.days}</span>
-              <span className="timer-label">Days</span>
-            </div>
-            <div className="timer-block">
-              <span className="timer-num">{timeLeft.hours}</span>
-              <span className="timer-label">Hours</span>
-            </div>
-            <div className="timer-block">
-              <span className="timer-num">{timeLeft.minutes}</span>
-              <span className="timer-label">Minutes</span>
-            </div>
-            <div className="timer-block">
-              <span className="timer-num">{timeLeft.seconds}</span>
-              <span className="timer-label">Seconds</span>
-            </div>
-          </div>
+          <span className="offering-subtitle">Special Offers</span>
+
         </div>
 
         <div className="offers-grid">
@@ -119,20 +102,21 @@ const SpecialOffers = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: item.id * 0.1 }}
+              whileHover={{
+                scale: 1.05,
+                y: -12,
+                transition: { type: "spring", stiffness: 400, damping: 12 }
+              }}
             >
-              <div className="card-top">
-                <span className="offer-badge">{item.badge}</span>
-                <div className="card-image-wrapper">
-                  <img src={item.img} alt={item.title} className="offer-img" />
+              <div className="offer-card-header">
+                <div className="header-text">
+                  <span className="card-category">{item.category}</span>
+                  <h3 className="card-title">{item.title}</h3>
                 </div>
-
               </div>
 
-              <div className="card-bottom">
-                <span className="card-category">{item.category}</span>
-                <h3>{item.title}</h3>
-
-
+              <div className="card-image-section">
+                <img src={item.img} alt={item.title} className="offer-img" />
               </div>
             </motion.div>
           ))}
