@@ -12,6 +12,7 @@ import ServicesSection from './components/ServicesSection';
 import CMS from './pages/CMS';
 import Login from './pages/Login';
 import ProductDetailPage from './pages/ProductDetailPage';
+import CategoryPage from './pages/CategoryPage';
 import './App.css';
 
 const Home = () => (
@@ -21,19 +22,8 @@ const Home = () => (
     <SpecialOffers />
     <TrendingProducts />
     <VerticalProductLists />
-    <ServicesSection />
-    <Certifications />
-    <section id="about" className="content-section dark">
-      <div className="section-header">
-        <h2 style={{ color: 'white' }}>About Nuragro</h2>
-        <div className="underline"></div>
-      </div>
-      <div className="about-content">
-        <div className="about-text">
-          <p>Founded in 1998, Nuragro has been at the forefront of industrial innovation. We provide end-to-end solutions for the world's most demanding sectors.</p>
-        </div>
-      </div>
-    </section>
+
+
   </main>
 );
 
@@ -50,6 +40,7 @@ const AppContent = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/category/:id" element={<CategoryPage />} />
         <Route path="/admin/*" element={<CMS />} />
         <Route path="/login" element={<Login />} />
       </Routes>

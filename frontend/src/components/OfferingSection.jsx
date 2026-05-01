@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Carrot, Apple, Milk, Coffee, Fish, Leaf, Drumstick, Egg, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import './OfferingSection.css';
 import { getCategories } from '../services/categoryService';
 
@@ -16,6 +17,7 @@ const getCategoryIcon = (name) => {
 };
 
 const OfferingSection = () => {
+  const navigate = useNavigate();
   const [offerings, setOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
@@ -93,6 +95,8 @@ const OfferingSection = () => {
             <div 
               key={item.id} 
               className="offering-card"
+              onClick={() => navigate(`/category/${item.id}`)}
+              style={{ cursor: 'pointer' }}
             >
               <div className="offering-icon-wrapper">
                 <div className="offering-icon-circle">

@@ -59,9 +59,7 @@ const TrendingProducts = () => {
         {/* Right Products Grid */}
         <div className="trending-products-side">
           <div className="trending-header-row">
-            <h2>Trending Products</h2>
-            <div className="header-line"></div>
-            <button className="see-more-btn">SEE MORE »</button>
+            <span className="offering-subtitle">Trending Products</span>
           </div>
 
           <div className="offers-grid">

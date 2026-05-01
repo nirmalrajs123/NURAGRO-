@@ -1,172 +1,153 @@
-/* ProductDetailPage.css */
-
-:root {
-  --agro-green: #2B7A3E; /* Logo Primary Green */
-  --agro-brown: #8B5A2B; /* Logo Earthy Brown */
-  --agro-lime: #A4C639;  /* Logo Leaf Accent */
-  --agro-cream: #ede9df; /* Updated warmer premium cream */
-  --agro-text: #1A1D16;
-  --agro-muted: #555C4D;
-  --agro-glass: rgba(255, 255, 255, 0.7);
-}
-
 .product-detail-container {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 40px;
-  max-width: 1400px;
-  margin: 20px auto 40px;
-  padding: 40px;
-  background: var(--agro-cream);
-  border-radius: 48px;
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.03);
-  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.product-detail-container::before {
-  content: '';
-  position: absolute;
-  top: -100px;
-  right: -100px;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, var(--agro-lime) 0%, transparent 70%);
-  opacity: 0.1;
-  filter: blur(50px);
-  z-index: 0;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Left side */
-.product-image-section {
   display: flex;
-  height: 100%;
-  z-index: 1;
+  flex-direction: column;
+  width: 100%;
+  background: #fbfbf9;
 }
 
-.main-product-img {
+.product-banner-section {
+  position: relative;
+  width: 100%;
+  height: 700px;
+  overflow: hidden;
+  background: white;
+}
+
+.banner-product-img {
   width: 100%;
   height: 100%;
-  min-height: 600px;
   object-fit: cover;
-  border-radius: 40px;
-  box-shadow: 0 30px 60px rgba(43, 122, 62, 0.12);
-  transition: transform 0.5s ease;
+  display: block;
 }
 
-.main-product-img:hover {
-  transform: scale(1.02);
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.6) 30%, transparent 70%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 8%;
+  z-index: 2;
 }
 
-/* Right side */
+.banner-content {
+  max-width: 600px;
+  animation: slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.banner-category-tag {
+  background: #FF8A1D; /* Bright orange like in the screenshot */
+  color: white;
+  padding: 6px 16px;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(255, 138, 29, 0.3);
+}
+
+.banner-product-title {
+  font-size: 110px; /* Massive bold font */
+  font-weight: 900;
+  color: #1A1D16; /* Near black */
+  line-height: 0.85;
+  margin: 0;
+  letter-spacing: -6px;
+  text-transform: lowercase; /* Matching the 'nirmal' style */
+  font-family: 'Outfit', sans-serif;
+}
+
 .product-content-section {
   display: flex;
   flex-direction: column;
-  z-index: 1;
-  height: 100%;
+  z-index: 3;
+  padding: 80px 8% 100px;
+  max-width: 1400px;
+  margin: -80px auto 0; /* Overlapping the banner slightly for depth */
+  width: 100%;
+  position: relative;
 }
 
-.category-tag {
+.details-block {
   display: flex;
-  align-items: center;
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--agro-green);
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  margin-bottom: 12px;
-  background: var(--agro-lime);
-  width: fit-content;
-  padding: 6px 16px;
-  border-radius: 100px;
+  flex-direction: column;
+  background: white;
+  padding: 50px;
+  border-radius: 40px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0,0,0,0.02);
 }
 
-.product-title {
-  font-size: 72px;
-  font-weight: 900;
-  color: var(--agro-green);
-  line-height: 1;
-  margin-bottom: 16px;
-  letter-spacing: -2px;
-}
-
-/* Pills */
 .pill-tags-container {
   display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 15px;
+  margin-bottom: 30px;
   flex-wrap: wrap;
 }
 
 .pill-tag {
   display: flex;
   align-items: center;
-  padding: 10px 22px;
+  padding: 12px 24px;
   border-radius: 100px;
   font-size: 14px;
-  font-weight: 600;
-  background: white;
-  color: var(--agro-green);
-  border: 1px solid rgba(59, 66, 36, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 700;
+  background: #f8faf7;
+  color: #2B7A3E;
+  border: 1px solid rgba(43, 122, 62, 0.1);
+  transition: all 0.3s;
 }
 
 .pill-tag.active {
-  background: var(--agro-green);
+  background: #2B7A3E;
   color: white;
-  border-color: var(--agro-green);
 }
 
 .pill-tag .dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--agro-lime);
-  margin-right: 10px;
+  background: #A4C639;
+  margin-right: 12px;
 }
 
 .divider-line {
   height: 1px;
-  background: linear-gradient(to right, rgba(59, 66, 36, 0.1) 0%, transparent 100%);
-  margin-bottom: 24px;
-  width: 100%;
-}
-
-/* Details block */
-.details-block {
-  display: flex;
-  flex-direction: column;
-  background: white;
-  padding: 40px;
-  border-radius: 32px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0,0,0,0.03);
-  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.05), transparent);
+  margin-bottom: 40px;
 }
 
 .details-main-content {
   display: flex;
-  gap: 32px;
-  align-items: center;
+  gap: 50px;
+  align-items: flex-start;
 }
 
 .details-img-wrapper {
   flex-shrink: 0;
+  width: 140px;
+  height: 140px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .small-detail-img {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
 }
 
 .details-text-wrapper {
@@ -174,159 +155,48 @@
 }
 
 .product-desc {
-  font-size: 16px;
-  color: var(--agro-brown);
-  line-height: 1.7;
-  margin-bottom: 24px;
+  font-size: 19px;
+  line-height: 1.8;
+  color: #555C4D;
+  margin-bottom: 40px;
   font-weight: 400;
-  opacity: 0.9;
 }
 
 .benefits-list {
   list-style: none;
-  padding: 0;
-  margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 20px;
+  padding: 0;
 }
 
 .benefits-list li {
-  font-size: 14px;
-  color: var(--agro-green);
   display: flex;
   align-items: center;
+  font-size: 16px;
   font-weight: 600;
-  font-family: 'Outfit', sans-serif;
+  color: #2B7A3E;
 }
 
-/* Nutrition Section */
-.product-nutrition-section {
-  padding: 120px 20px;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-.nutrition-container {
-  max-width: 1300px;
-  width: 100%;
-}
-
-.nutrition-header {
-  text-align: left;
-  margin-bottom: 72px;
-}
-
-.nutrition-tag {
-  color: var(--agro-green);
-  font-weight: 800;
-  font-size: 12px;
-  letter-spacing: 4px;
-  margin-bottom: 16px;
-  display: block;
-  text-transform: uppercase;
-}
-
-.nutrition-title {
-  color: var(--agro-green);
-  font-size: 56px;
-  font-weight: 900;
-  margin: 0 0 24px 0;
-  font-family: 'Outfit', sans-serif;
-  letter-spacing: -2px;
-  line-height: 1;
-}
-
-.nutrition-subtitle {
-  color: var(--agro-muted);
-  font-size: 18px;
-  line-height: 1.6;
-  max-width: 700px;
-}
-
-/* Facts Section */
-.product-facts-section {
-  padding: 120px 20px;
-  background-color: var(--agro-green);
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-.product-facts-section::after {
-  content: '';
-  position: absolute;
-  bottom: -50px;
-  left: -50px;
-  width: 200px;
-  height: 200px;
-  background: var(--agro-lime);
-  opacity: 0.1;
-  border-radius: 50%;
-  filter: blur(40px);
-}
-
-.facts-container {
-  max-width: 1100px;
-  width: 100%;
-  text-align: left;
-}
-
-.facts-tag {
-  color: var(--agro-lime);
-  font-weight: 800;
-  font-size: 12px;
-  letter-spacing: 4px;
-  margin-bottom: 16px;
-  display: block;
-  text-transform: uppercase;
-}
-
-.facts-title {
-  color: #ffffff;
-  font-size: 56px;
-  font-weight: 900;
-  margin: 0 0 48px 0;
-  font-family: 'Outfit', sans-serif;
-  letter-spacing: -2px;
-  line-height: 1;
-}
-
-.facts-content {
-  max-width: 900px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.facts-paragraph {
-  color: rgba(255, 255, 255, 0.95);
-  font-size: 20px;
-  line-height: 1.7;
-  margin: 0;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 300;
-}
-
-@media (max-width: 1100px) {
-  .product-detail-container {
+@media (max-width: 1024px) {
+  .banner-product-title {
+    font-size: 80px;
+  }
+  .details-main-content {
     flex-direction: column;
-    padding: 40px;
-    margin-top: 100px;
-    gap: 40px;
   }
-  .product-image-section {
-    max-width: 100%;
+  .details-img-wrapper {
+    display: none;
   }
-  .product-title {
-    font-size: 48px;
+}
+
+@media (max-width: 768px) {
+  .banner-product-title {
+    font-size: 60px;
+    letter-spacing: -3px;
   }
-  .nutrition-title, .facts-title {
-    font-size: 40px;
+  .banner-overlay {
+    padding-left: 5%;
   }
   .benefits-list {
     grid-template-columns: 1fr;

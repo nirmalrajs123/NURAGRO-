@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getProductById } from '../services/productService';
 
 import ProductPackingSection from '../components/ProductPackingSection';
+import ProductTypeSection from '../components/ProductTypeSection';
 import './ProductDetailPage.css';
 
 const ProductDetailPage = () => {
@@ -77,21 +78,20 @@ const ProductDetailPage = () => {
   return (
     <>
       <div className="product-detail-container">
-        {/* Left Column: Large Image */}
-        <div className="product-image-section">
-          <img src={imageSrc} alt={product.name} className="main-product-img" />
+        {/* Banner Hero Section */}
+        <div className="product-banner-section">
+          <img src={imageSrc} alt={product.name} className="banner-product-img" />
+          <div className="banner-overlay">
+            <div className="banner-content">
+              <span className="banner-category-tag">{product.category_name || 'PREMIUM AGRO'}</span>
+              <h1 style={{ fontSize: "5rem" }} className="offering-subtitle">{product.name}</h1>
+            </div>
+          </div>
         </div>
 
-        {/* Right Column: Content */}
+        {/* Product Content Section */}
         <div className="product-content-section">
           <div className="details-block">
-            <div className="category-tag">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
-              {product.category_name || 'PREMIUM AGRO'}
-            </div>
-
-            <h1 className="product-title">{product.name}</h1>
-
             <div className="pill-tags-container">
               <span className="pill-tag active"><span className="dot"></span>Premium Quality</span>
               <span className="pill-tag"><span className="dot"></span>Organic Certified</span>
@@ -101,10 +101,6 @@ const ProductDetailPage = () => {
             <div className="divider-line"></div>
 
             <div className="details-main-content">
-              <div className="details-img-wrapper">
-                <img src={imageSrc} alt="Details" className="small-detail-img" />
-              </div>
-
               <div className="details-text-wrapper">
                 <p className="product-desc">
                   {product.description || "Our objective is to craft meaningful solutions that elevate identity and improve usability."}
@@ -291,6 +287,12 @@ const ProductDetailPage = () => {
           </div>
         </section>
       )}
+
+      {/* Product Variations Section */}
+      <ProductTypeSection typeOptions={product.type_options} />
+
+      {/* Product Packing Section */}
+      <ProductPackingSection packingOptions={product.packing_options} />
 
       {(product.description_facts || product.facts) && (
         <section className="product-facts-section">

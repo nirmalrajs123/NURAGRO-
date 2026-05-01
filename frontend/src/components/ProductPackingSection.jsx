@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, Package, Archive } from 'lucide-react';
 import './ProductPackingSection.css';
 
 const ProductPackingSection = ({ packingOptions = [] }) => {
@@ -8,61 +9,46 @@ const ProductPackingSection = ({ packingOptions = [] }) => {
     <section className="packing-section">
       <div className="packing-container">
         <div className="packing-header">
-          <div className="packing-header-left">
-            <span className="packing-tag">PACKING OPTIONS</span>
-            <h2 className="packing-title">CHOOSE THE RIGHT PACKING FOR YOU</h2>
-          </div>
-          <div className="packing-header-right">
-            <p>
-              We offer a variety of packing options to suit your needs. Select the most convenient and secure packaging designed to preserve quality and freshness.
-            </p>
-          </div>
+          <span className="packing-tag">PACKING & LOGISTICS</span>
+          <h2 className="packing-title">Standard Packing Options</h2>
+          <div className="title-underline"></div>
         </div>
 
-        <div className="packing-list">
+        <div className="packing-grid">
           {packingOptions.map((opt, idx) => {
-            if (!opt) return null;
-            
             const imageSrc = opt.image_path 
-              ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'}${opt.image_path.startsWith('/') ? '' : '/'}${opt.image_path}` 
-              : 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&q=80&w=600';
-              
+              ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${opt.image_path.startsWith('/') ? '' : '/'}${opt.image_path}` 
+              : 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=600';
+
             return (
-              <div key={`pack-${idx}`} className="packing-card">
-                <div className="packing-img-col">
-                  <img src={imageSrc} alt={opt.packing_product} />
+              <div key={opt.id || idx} className="packing-modern-card">
+                <div className="packing-card-image">
+                  <img src={imageSrc} alt="Packing option" />
+                  <div className="image-overlay-icon">
+                    <Box size={20} />
+                  </div>
                 </div>
                 
-                <div className="packing-content-col">
-                  <div className="packing-card-header">
-                    <h3 className="packing-card-title">{opt.packing_product || `Option ${idx + 1}`}</h3>
-                    {opt.packing_container && <span className="packing-card-badge">{opt.packing_container}</span>}
+                <div className="packing-card-content">
+                  <div className="info-group">
+                    <span className="info-label"><Package size={14} /> PACKING DESCRIPTION</span>
+                    <p className="info-value description">{opt.packing_product}</p>
                   </div>
-                  
-                  <p className="packing-card-desc">
-                    {opt.packing_packing || 'Standard secure packaging for optimal preservation during transport and storage.'}
-                  </p>
-                  
-                  <div className="packing-perfect-for">
-                    <strong>PERFECT FOR</strong>
-                    <ul className="packing-features-list">
-                      <li>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        Bulk storage
-                      </li>
-                      <li>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        Safe transit
-                      </li>
-                      <li>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        Freshness guarantee
-                      </li>
-                    </ul>
+
+                  <div className="info-row">
+                    <div className="info-group">
+                      <span className="info-label"><Archive size={14} /> QUANTITY</span>
+                      <p className="info-value highlighted">{opt.packing_packing}</p>
+                    </div>
+                    
+                    <div className="info-group">
+                      <span className="info-label">CONTAINER</span>
+                      <p className="info-value">{opt.packing_container}</p>
+                    </div>
                   </div>
-                  
-                  <button className="packing-select-btn">SELECT PACKING</button>
                 </div>
+
+                <div className="card-footer-accent"></div>
               </div>
             );
           })}

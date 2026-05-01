@@ -53,6 +53,8 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             style={heroBanner ? { textShadow: '0 2px 10px rgba(0,0,0,0.1)' } : {}}
+            className="offering-subtitle"
+
           >
             {title}
           </motion.h1>
@@ -74,7 +76,7 @@ const Hero = () => {
           </motion.div>
         )}
       </div>
-    </section>
+    </section >
   );
 };
 

@@ -69,12 +69,12 @@
 }
 
 .compact-img-wrapper {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   background-color: #f8faf7;
   border: 1px solid #eef2ec;
-  border-radius: 12px;
-  padding: 10px;
+  border-radius: 14px;
+  padding: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,18 +93,18 @@
 }
 
 .compact-cat {
-  font-size: 12px;
+  font-size: 13px;
   color: #84cc16;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
 .compact-info h4 {
-  font-size: 15px;
+  font-size: 17px;
   color: #1c1917;
   margin: 0 0 6px;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
 }
 
 .compact-price {
